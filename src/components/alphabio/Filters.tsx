@@ -44,10 +44,16 @@ export function Filters() {
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Marca</p>
             <ul className="space-y-1.5">
+              <li>
+                <label className="flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-success">
+                  <input type="radio" name="brand" defaultChecked className="accent-success h-3.5 w-3.5" />
+                  Todas
+                </label>
+              </li>
               {brands.map((b) => (
                 <li key={b}>
                   <label className="flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-success">
-                    <input type="checkbox" className="accent-success h-3.5 w-3.5" />
+                    <input type="radio" name="brand" className="accent-success h-3.5 w-3.5" />
                     {b}
                   </label>
                 </li>
