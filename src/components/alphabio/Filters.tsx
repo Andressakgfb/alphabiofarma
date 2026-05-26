@@ -24,12 +24,17 @@ export function Filters() {
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Categoria</p>
             <ul className="space-y-1.5">
+              <li>
+                <label className="flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-success">
+                  <input type="radio" name="cat" defaultChecked className="accent-success h-3.5 w-3.5" />
+                  <span className="flex-1">Todas</span>
+                </label>
+              </li>
               {categories.map((c) => (
-                <li key={c.name}>
+                <li key={c}>
                   <label className="flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-success">
                     <input type="radio" name="cat" className="accent-success h-3.5 w-3.5" />
-                    <span className="flex-1">{c.name}</span>
-                    <span className="text-[11px] text-muted-foreground">{c.count}</span>
+                    <span className="flex-1">{c}</span>
                   </label>
                 </li>
               ))}
