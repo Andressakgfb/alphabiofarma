@@ -1,14 +1,13 @@
 import { SlidersHorizontal } from "lucide-react";
 
 const categories = [
-  { name: "Suplementação", count: 142 },
-  { name: "Hormônios Regenerativos", count: 38 },
-  { name: "Vitaminas & Minerais", count: 96 },
-  { name: "Performance", count: 54 },
-  { name: "Longevidade", count: 27 },
+  "Suplementação e Performance",
+  "Hormônio Crescimento Regenerativo",
+  "RETRATUTIDA",
+  "TIRZEPATIDA / MOUNJARO",
 ];
 
-const brands = ["AlphaBio Lab", "PureLine", "Pureform", "AlphaBio Clinic", "NovaCell"];
+const brands = ["Oxygen kW", "LANDERLAN", "INDUFAR", "Lipoless", "TIRZEC", "SYNEDICA", "ZPHC"];
 
 export function Filters() {
   return (
