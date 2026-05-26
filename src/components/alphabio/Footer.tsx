@@ -29,12 +29,21 @@ export function Footer() {
 
         <div>
           <h4 className="text-base font-bold mb-4">Pagamento e segurança</h4>
-          <ul className="space-y-3 text-sm text-muted-foreground">
-            <li className="flex items-center gap-2.5"><ShieldCheck className="h-5 w-5 text-primary" /> Site protegido com SSL</li>
-            <li className="flex items-center gap-2.5"><CreditCard className="h-5 w-5 text-primary" /> Cartão, Pix e boleto</li>
-            <li className="flex items-center gap-2.5"><Truck className="h-5 w-5 text-primary" /> PAC</li>
-            <li className="flex items-center gap-2.5"><Truck className="h-5 w-5 text-primary" /> SEDEX</li>
-            <li className="flex items-center gap-2.5"><Truck className="h-5 w-5 text-primary" /> Transportadora</li>
+          <ul className="space-y-3 text-sm text-foreground/80">
+            {[
+              { Icon: ShieldCheck, label: "Site protegido com SSL" },
+              { Icon: CreditCard, label: "Cartão, Pix e boleto" },
+              { Icon: Truck, label: "PAC" },
+              { Icon: Truck, label: "SEDEX" },
+              { Icon: Truck, label: "Transportadora" },
+            ].map(({ Icon, label }, i) => (
+              <li key={i} className="flex items-center gap-3">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10">
+                  <Icon className="h-5 w-5 text-primary" strokeWidth={2.2} />
+                </span>
+                {label}
+              </li>
+            ))}
           </ul>
           <div className="border-t border-border mt-6 pt-4 space-y-2 text-sm text-muted-foreground">
             <a href="#" className="block hover:text-primary">Política de Privacidade</a>
