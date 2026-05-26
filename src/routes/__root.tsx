@@ -72,14 +72,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Alphabio Farma" },
+      { name: "description", content: "Loja especializada em peptídeos e produtos de alta qualidade voltados para pesquisa, performance e bem-estar." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Alphabio Farma" },
+      { property: "og:description", content: "Loja especializada em peptídeos e produtos de alta qualidade voltados para pesquisa, performance e bem-estar." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Alphabio Farma" },
+      { name: "twitter:description", content: "Loja especializada em peptídeos e produtos de alta qualidade voltados para pesquisa, performance e bem-estar." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/z0ZQVflKJzZVBIWR9RRAxbzQZZ02/social-images/social-1779832908950-F74DAC0D-718A-45EB-AC38-9CAC82CD692D.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/z0ZQVflKJzZVBIWR9RRAxbzQZZ02/social-images/social-1779832908950-F74DAC0D-718A-45EB-AC38-9CAC82CD692D.webp" },
     ],
     links: [
       {
