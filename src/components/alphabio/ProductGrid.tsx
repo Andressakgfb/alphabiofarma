@@ -105,7 +105,7 @@ function ProductCard({ p }: { p: Product }) {
 
       <div className="flex flex-col p-3 gap-1.5 flex-1">
         <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{p.brand}</span>
-        <h3 className="text-sm font-semibold text-foreground leading-snug line-clamp-2 min-h-[2.5rem]">
+        <h3 className="text-sm font-semibold text-foreground leading-snug line-clamp-2 min-h-[2.5rem] transition-colors duration-300 group-hover:text-primary">
           {p.name}
         </h3>
         <div className="flex items-center gap-1.5">
