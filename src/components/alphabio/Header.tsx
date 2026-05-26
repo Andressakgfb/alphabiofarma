@@ -1,4 +1,5 @@
 import { Search, MapPin, User, ShoppingCart, Menu } from "lucide-react";
+import logo from "@/assets/logo-alphabio.png";
 
 export function Header() {
   return (
@@ -7,9 +8,8 @@ export function Header() {
         <button aria-label="Menu" className="md:hidden p-1.5 -ml-1 text-foreground">
           <Menu className="h-5 w-5" />
         </button>
-        <a href="/" className="flex items-center gap-1.5 font-bold tracking-tight text-foreground">
-          <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-[var(--gradient-cta)] text-primary-foreground text-xs">α</span>
-          <span className="text-base">AlphaBio<span className="text-success"> Farma</span></span>
+        <a href="/" className="flex items-center" aria-label="AlphaBio Farma">
+          <img src={logo} alt="AlphaBio Farma" className="h-9 w-auto" />
         </a>
 
         <div className="hidden md:flex flex-1 items-center gap-2 ml-4">
