@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { Search, MapPin, User, ShoppingCart, Menu } from "lucide-react";
 import logo from "@/assets/logo-alphabio.png";
+import { AuthModal } from "./AuthModal";
 
 export function Header() {
+  const [authOpen, setAuthOpen] = useState(false);
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
       <div className="mx-auto max-w-7xl px-4 h-14 flex items-center gap-3">
@@ -23,7 +26,7 @@ export function Header() {
         <button aria-label="Buscar" className="p-2 text-foreground/70 hover:text-foreground">
           <Search className="h-5 w-5" />
         </button>
-        <button aria-label="Conta" className="hidden sm:block p-2 text-foreground/70 hover:text-foreground">
+        <button onClick={() => setAuthOpen(true)} aria-label="Conta" className="p-2 text-foreground/70 hover:text-foreground transition">
           <User className="h-5 w-5" />
         </button>
         <button aria-label="Carrinho" className="relative p-2 text-foreground/70 hover:text-foreground">
@@ -37,6 +40,8 @@ export function Header() {
         <MapPin className="h-3.5 w-3.5 text-success" />
         Enviar para <span className="font-medium text-foreground">00000-000</span>
       </div>
+
+      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </header>
   );
 }
