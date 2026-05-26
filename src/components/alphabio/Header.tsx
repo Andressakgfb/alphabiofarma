@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Search, MapPin, User, ShoppingCart, Menu, LogOut } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Search, MapPin, User, ShoppingCart, Menu } from "lucide-react";
 import logo from "@/assets/logo-alphabio.png";
 import { AuthModal } from "./AuthModal";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
 
 export function Header() {
   const [authOpen, setAuthOpen] = useState(false);
@@ -16,11 +16,6 @@ export function Header() {
     supabase.auth.getSession().then(({ data }) => setUserEmail(data.session?.user?.email ?? null));
     return () => subscription.unsubscribe();
   }, []);
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    toast.success("Você saiu da conta");
-  };
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
@@ -45,18 +40,18 @@ export function Header() {
         </button>
 
         {userEmail ? (
-          <button
-            onClick={handleLogout}
-            aria-label="Sair"
+          <Link
+            to="/conta"
+            aria-label="Minha conta"
             title={userEmail}
             className="p-2 text-foreground/70 hover:text-foreground transition"
           >
-            <LogOut className="h-5 w-5" />
-          </button>
+            <User className="h-5 w-5" />
+          </Link>
         ) : (
           <button
             onClick={() => setAuthOpen(true)}
-            aria-label="Conta"
+            aria-label="Entrar"
             className="p-2 text-foreground/70 hover:text-foreground transition"
           >
             <User className="h-5 w-5" />
