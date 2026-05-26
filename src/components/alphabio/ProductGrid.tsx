@@ -72,13 +72,13 @@ function Stars({ n }: { n: number }) {
 function ProductCard({ p }: { p: Product }) {
   const outOfStock = p.stock === 0;
   return (
-    <article className="group relative flex flex-col rounded-2xl border border-border bg-card overflow-hidden shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-all duration-300 hover:-translate-y-0.5">
+    <article className="group relative flex flex-col rounded-2xl border border-border bg-card overflow-hidden shadow-[var(--shadow-card)] transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.18)] hover:border-primary/30">
       <div className="relative aspect-square bg-surface overflow-hidden">
         <img
           src={p.image}
           alt={p.name}
           loading="lazy"
-          className="h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-105"
+          className="h-full w-full object-contain p-3 transition-transform duration-500 ease-out group-hover:scale-110"
         />
 
         {p.tag && (
