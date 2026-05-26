@@ -30,11 +30,11 @@ export function Footer() {
         <div>
           <h4 className="text-base font-bold mb-4">Pagamento e segurança</h4>
           <ul className="space-y-3 text-sm text-muted-foreground">
-            <li className="flex items-center gap-2.5"><ShieldCheck className="h-5 w-5 text-muted-foreground" /> Site protegido com SSL</li>
-            <li className="flex items-center gap-2.5"><CreditCard className="h-5 w-5 text-muted-foreground" /> Cartão, Pix e boleto</li>
-            <li className="flex items-center gap-2.5"><Truck className="h-5 w-5 text-muted-foreground" /> PAC</li>
-            <li className="flex items-center gap-2.5"><Truck className="h-5 w-5 text-muted-foreground" /> SEDEX</li>
-            <li className="flex items-center gap-2.5"><Truck className="h-5 w-5 text-muted-foreground" /> Transportadora</li>
+            <li className="flex items-center gap-2.5"><ShieldCheck className="h-5 w-5 text-primary" /> Site protegido com SSL</li>
+            <li className="flex items-center gap-2.5"><CreditCard className="h-5 w-5 text-primary" /> Cartão, Pix e boleto</li>
+            <li className="flex items-center gap-2.5"><Truck className="h-5 w-5 text-primary" /> PAC</li>
+            <li className="flex items-center gap-2.5"><Truck className="h-5 w-5 text-primary" /> SEDEX</li>
+            <li className="flex items-center gap-2.5"><Truck className="h-5 w-5 text-primary" /> Transportadora</li>
           </ul>
           <div className="border-t border-border mt-6 pt-4 space-y-2 text-sm text-muted-foreground">
             <a href="#" className="block hover:text-primary">Política de Privacidade</a>
