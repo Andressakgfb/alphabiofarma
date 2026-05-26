@@ -1,14 +1,13 @@
 import { SlidersHorizontal } from "lucide-react";
 
 const categories = [
-  { name: "Suplementação", count: 142 },
-  { name: "Hormônios Regenerativos", count: 38 },
-  { name: "Vitaminas & Minerais", count: 96 },
-  { name: "Performance", count: 54 },
-  { name: "Longevidade", count: 27 },
+  "Suplementação e Performance",
+  "Hormônio Crescimento Regenerativo",
+  "RETRATUTIDA",
+  "TIRZEPATIDA / MOUNJARO",
 ];
 
-const brands = ["AlphaBio Lab", "PureLine", "Pureform", "AlphaBio Clinic", "NovaCell"];
+const brands = ["Oxygen kW", "LANDERLAN", "INDUFAR", "Lipoless", "TIRZEC", "SYNEDICA", "ZPHC"];
 
 export function Filters() {
   return (
@@ -25,12 +24,17 @@ export function Filters() {
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Categoria</p>
             <ul className="space-y-1.5">
+              <li>
+                <label className="flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-success">
+                  <input type="radio" name="cat" defaultChecked className="accent-success h-3.5 w-3.5" />
+                  <span className="flex-1">Todas</span>
+                </label>
+              </li>
               {categories.map((c) => (
-                <li key={c.name}>
+                <li key={c}>
                   <label className="flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-success">
                     <input type="radio" name="cat" className="accent-success h-3.5 w-3.5" />
-                    <span className="flex-1">{c.name}</span>
-                    <span className="text-[11px] text-muted-foreground">{c.count}</span>
+                    <span className="flex-1">{c}</span>
                   </label>
                 </li>
               ))}
@@ -40,10 +44,16 @@ export function Filters() {
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Marca</p>
             <ul className="space-y-1.5">
+              <li>
+                <label className="flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-success">
+                  <input type="radio" name="brand" defaultChecked className="accent-success h-3.5 w-3.5" />
+                  Todas
+                </label>
+              </li>
               {brands.map((b) => (
                 <li key={b}>
                   <label className="flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-success">
-                    <input type="checkbox" className="accent-success h-3.5 w-3.5" />
+                    <input type="radio" name="brand" className="accent-success h-3.5 w-3.5" />
                     {b}
                   </label>
                 </li>
