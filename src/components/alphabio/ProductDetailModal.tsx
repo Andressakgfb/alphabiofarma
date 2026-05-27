@@ -99,6 +99,7 @@ export function ProductDetailModal({
             <button
               disabled={outOfStock}
               onClick={() => {
+                cart.add({ id: product.id, name: product.name, brand: product.brand, image: product.image, price: product.price });
                 toast.success(`${product.name} adicionado ao carrinho`);
                 onClose();
               }}
