@@ -29,6 +29,9 @@ export function SmartSearch() {
   const [brand, setBrand] = useState("Todas");
   const [priceMax, setPriceMax] = useState(5000);
   const ref = useRef<HTMLDivElement>(null);
+  const { categories, brands } = useTaxonomy();
+  const { isAdmin } = useIsAdmin();
+  const [editing, setEditing] = useState<null | "category" | "brand">(null);
 
   // Live search: push to store on every change
   useEffect(() => {
