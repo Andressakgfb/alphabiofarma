@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { X, ShoppingCart, ShieldCheck, Truck, Star, Check, Pencil, Save, RotateCcw } from "lucide-react";
+import { X, ShoppingCart, ShieldCheck, Truck, Star, Check, Pencil, Save, RotateCcw, ImageIcon, DollarSign } from "lucide-react";
 import { Portal } from "./Portal";
 import { cart } from "@/lib/cart";
 import { productDescriptions, type ProductDescription } from "@/lib/productDescriptions";
-import { descriptionOverrides } from "@/lib/productDescriptionOverrides";
+import { descriptionOverrides, fieldOverrides } from "@/lib/productDescriptionOverrides";
+import { shouldShowBrand } from "./ProductGrid";
 import { toast } from "sonner";
 
 export type ProductDetail = {
