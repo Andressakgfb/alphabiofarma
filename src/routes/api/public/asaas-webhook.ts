@@ -62,7 +62,7 @@ export const Route = createFileRoute("/api/public/asaas-webhook")({
           ? String(payment.billingType).toLowerCase()
           : undefined;
 
-        const update: Record<string, unknown> = { status: newStatus };
+        const update: { status: string; payment_method?: string } = { status: newStatus };
         if (paymentMethod) update.payment_method = paymentMethod;
 
         const { error } = await supabaseAdmin
