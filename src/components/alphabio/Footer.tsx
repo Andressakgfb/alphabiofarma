@@ -55,7 +55,7 @@ export function Footer() {
       <div className="border-t border-border">
         <div className="mx-auto max-w-7xl px-6 py-6 text-center space-y-2">
           <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} AlphaBio. Todos os direitos reservados.</p>
-          <a href="#" className="text-sm text-muted-foreground/80 underline hover:text-primary">LGPD e Responsabilidades</a>
+          <a href="#" className="text-sm text-muted-foreground underline hover:text-primary">LGPD e Responsabilidades</a>
         </div>
       </div>
     </footer>
