@@ -16,27 +16,39 @@ export type Database = {
     Tables: {
       orders: {
         Row: {
+          asaas_invoice_url: string | null
+          asaas_payment_id: string | null
           created_at: string
+          customer: Json | null
           id: string
           items: Json
+          payment_method: string | null
           status: string
           total: number
           updated_at: string
           user_id: string
         }
         Insert: {
+          asaas_invoice_url?: string | null
+          asaas_payment_id?: string | null
           created_at?: string
+          customer?: Json | null
           id?: string
           items?: Json
+          payment_method?: string | null
           status?: string
           total?: number
           updated_at?: string
           user_id: string
         }
         Update: {
+          asaas_invoice_url?: string | null
+          asaas_payment_id?: string | null
           created_at?: string
+          customer?: Json | null
           id?: string
           items?: Json
+          payment_method?: string | null
           status?: string
           total?: number
           updated_at?: string
