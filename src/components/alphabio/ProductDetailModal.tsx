@@ -258,6 +258,111 @@ export function ProductDetailModal({
               <p className="text-xs text-muted-foreground">
                 ou {product.installment.count}x de R$ {product.installment.value.toFixed(2).replace(".", ",")} sem juros
               </p>
+
+              {!editingFields ? (
+                <div className="flex items-center gap-2 mt-3">
+                  <button
+                    onClick={() => setEditingFields(true)}
+                    className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-border bg-card text-xs font-medium text-foreground hover:bg-surface transition"
+                  >
+                    <Pencil className="h-3.5 w-3.5" /> Editar preço e imagem
+                  </button>
+                  {!!fieldOverrides.get(product.id) && (
+                    <button
+                      onClick={() => {
+                        fieldOverrides.remove(product.id);
+                        toast.success("Preço e imagem restaurados");
+                      }}
+                      className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-border bg-card text-xs font-medium text-muted-foreground hover:text-foreground transition"
+                    >
+                      <RotateCcw className="h-3.5 w-3.5" /> Restaurar
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div className="mt-3 flex flex-col gap-2 rounded-lg border border-primary/40 bg-card p-3">
+                  <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground inline-flex items-center gap-1">
+                    <DollarSign className="h-3 w-3" /> Preço (R$)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={priceDraft}
+                    onChange={(e) => setPriceDraft(e.target.value)}
+                    className="w-full rounded-md border border-border bg-surface p-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  />
+
+                  <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mt-1">
+                    Preço antigo (opcional, para mostrar riscado)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={oldPriceDraft}
+                    onChange={(e) => setOldPriceDraft(e.target.value)}
+                    placeholder="Deixe em branco para não exibir"
+                    className="w-full rounded-md border border-border bg-surface p-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  />
+
+                  <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mt-1 inline-flex items-center gap-1">
+                    <ImageIcon className="h-3 w-3" /> URL da imagem
+                  </label>
+                  <input
+                    type="url"
+                    value={imageDraft}
+                    onChange={(e) => setImageDraft(e.target.value)}
+                    placeholder="https://..."
+                    className="w-full rounded-md border border-border bg-surface p-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  />
+                  {imageDraft && (
+                    <div className="h-24 w-24 rounded-md border border-border bg-surface flex items-center justify-center overflow-hidden self-start">
+                      <img src={imageDraft} alt="Pré-visualização" className="h-full w-full object-contain p-1" />
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-2 mt-1">
+                    <button
+                      onClick={() => {
+                        const priceNum = parseFloat(priceDraft);
+                        if (!isFinite(priceNum) || priceNum < 0) {
+                          toast.error("Informe um preço válido");
+                          return;
+                        }
+                        const oldNum = oldPriceDraft.trim() === "" ? null : parseFloat(oldPriceDraft);
+                        if (oldNum !== null && (!isFinite(oldNum) || oldNum < 0)) {
+                          toast.error("Preço antigo inválido");
+                          return;
+                        }
+                        if (!imageDraft.trim()) {
+                          toast.error("Informe a URL da imagem");
+                          return;
+                        }
+                        fieldOverrides.set(product.id, {
+                          price: priceNum,
+                          oldPrice: oldNum,
+                          image: imageDraft.trim(),
+                        });
+                        setEditingFields(false);
+                        toast.success("Preço e imagem atualizados");
+                      }}
+                      className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition"
+                    >
+                      <Save className="h-3.5 w-3.5" /> Salvar
+                    </button>
+                    <button
+                      onClick={() => setEditingFields(false)}
+                      className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md border border-border bg-card text-xs font-medium text-foreground hover:bg-surface transition"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground">
+                    As alterações ficam salvas neste navegador.
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="flex items-center gap-3 text-xs text-muted-foreground">
