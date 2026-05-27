@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { X, ShoppingCart, ShieldCheck, Truck, Star, Check, Pencil, Save, RotateCcw, ImageIcon, DollarSign } from "lucide-react";
+import { X, ShoppingCart, ShieldCheck, Truck, Star, Check, Pencil, Save, RotateCcw, ImageIcon, DollarSign, Package } from "lucide-react";
 import { Portal } from "./Portal";
 import { cart } from "@/lib/cart";
 import { productDescriptions, type ProductDescription } from "@/lib/productDescriptions";
@@ -38,6 +38,7 @@ export function ProductDetailModal({
   const [priceDraft, setPriceDraft] = useState("");
   const [oldPriceDraft, setOldPriceDraft] = useState("");
   const [imageDraft, setImageDraft] = useState("");
+  const [stockDraft, setStockDraft] = useState("");
   const [desc, setDesc] = useState<ProductDescription | undefined>(undefined);
   const [draft, setDraft] = useState<ProductDescription>({ intro: "" });
   const [, force] = useState(0);
@@ -51,6 +52,7 @@ export function ProductDetailModal({
     setPriceDraft(String(product.price));
     setOldPriceDraft(product.oldPrice ? String(product.oldPrice) : "");
     setImageDraft(product.image);
+    setStockDraft(String(product.stock));
   }, [product]);
 
   useEffect(() => {
