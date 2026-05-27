@@ -76,12 +76,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Alphabio Farma" },
       { name: "description", content: "Loja especializada em peptídeos e produtos de alta qualidade voltados para pesquisa, performance e bem-estar." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Alphabio Farma" },
+      { property: "og:title", content: "AlphaBio Farma — Suplementação e Hormônios" },
       { property: "og:description", content: "Loja especializada em peptídeos e produtos de alta qualidade voltados para pesquisa, performance e bem-estar." },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "AlphaBio Farma" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Alphabio Farma" },
+      { name: "twitter:title", content: "AlphaBio Farma — Suplementação e Hormônios" },
       { name: "twitter:description", content: "Loja especializada em peptídeos e produtos de alta qualidade voltados para pesquisa, performance e bem-estar." },
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/z0ZQVflKJzZVBIWR9RRAxbzQZZ02/social-images/social-1779832908950-F74DAC0D-718A-45EB-AC38-9CAC82CD692D.webp" },
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/z0ZQVflKJzZVBIWR9RRAxbzQZZ02/social-images/social-1779832908950-F74DAC0D-718A-45EB-AC38-9CAC82CD692D.webp" },
@@ -90,6 +91,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: appCss,
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              name: "AlphaBio Farma",
+              url: "https://alphabiofarma.lovable.app/",
+              logo: "https://alphabiofarma.lovable.app/favicon.ico",
+            },
+            {
+              "@type": "WebSite",
+              name: "AlphaBio Farma",
+              url: "https://alphabiofarma.lovable.app/",
+            },
+          ],
+        }),
       },
     ],
   }),

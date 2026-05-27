@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /reset-password
+
+Sitemap: https://alphabiofarma.lovable.app/sitemap.xml

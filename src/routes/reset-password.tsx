@@ -5,6 +5,19 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordPage,
+  head: () => ({
+    meta: [
+      { title: "Redefinir Senha — AlphaBio Farma" },
+      { name: "description", content: "Defina uma nova senha para acessar sua conta na AlphaBio Farma." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Redefinir Senha — AlphaBio Farma" },
+      { property: "og:description", content: "Crie uma nova senha para sua conta AlphaBio Farma." },
+      { property: "og:url", content: "https://alphabiofarma.lovable.app/reset-password" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://alphabiofarma.lovable.app/reset-password" },
+    ],
+  }),
 });
 
 function ResetPasswordPage() {
