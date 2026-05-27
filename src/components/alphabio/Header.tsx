@@ -4,6 +4,8 @@ import logo from "@/assets/logo-alphabio.png";
 import { AuthModal } from "./AuthModal";
 import { CepModal } from "./CepModal";
 import { SearchModal } from "./SearchModal";
+import { CartModal } from "./CartModal";
+import { cart, cartCount } from "@/lib/cart";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -11,8 +13,16 @@ export function Header() {
   const [authOpen, setAuthOpen] = useState(false);
   const [cepOpen, setCepOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [cep, setCep] = useState<string>("");
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    setCount(cartCount(cart.get()));
+    const unsub = cart.subscribe(() => setCount(cartCount(cart.get())));
+    return unsub;
+  }, []);
 
   useEffect(() => {
     const stored = typeof window !== "undefined" ? localStorage.getItem("alphabio_cep") : null;
@@ -84,9 +94,17 @@ export function Header() {
           </button>
         )}
 
-        <button aria-label="Carrinho" className="relative p-2 text-foreground/70 hover:text-foreground">
+        <button
+          onClick={() => setCartOpen(true)}
+          aria-label="Carrinho"
+          className="relative p-2 text-foreground/70 hover:text-foreground"
+        >
           <ShoppingCart className="h-5 w-5" />
-          <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-success text-success-foreground text-[10px] font-semibold flex items-center justify-center">2</span>
+          {count > 0 && (
+            <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 rounded-full bg-success text-success-foreground text-[10px] font-semibold flex items-center justify-center">
+              {count}
+            </span>
+          )}
         </button>
       </div>
 
@@ -102,6 +120,7 @@ export function Header() {
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
       <CepModal open={cepOpen} initialCep={cep} onClose={() => setCepOpen(false)} onSave={handleSaveCep} />
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <CartModal open={cartOpen} onClose={() => setCartOpen(false)} />
     </header>
   );
 }
