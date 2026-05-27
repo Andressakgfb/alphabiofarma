@@ -71,7 +71,9 @@ export function CartModal({ open, onClose }: { open: boolean; onClose: () => voi
                     <img src={it.image} alt={it.name} className="h-full w-full object-contain p-1" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{it.brand}</p>
+                    {!it.brand.toLowerCase().startsWith("alphabio") && (
+                      <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{it.brand}</p>
+                    )}
                     <p className="text-sm font-semibold text-foreground line-clamp-2">{it.name}</p>
                     <p className="text-sm font-bold text-success mt-0.5">
                       R$ {it.price.toFixed(2).replace(".", ",")}

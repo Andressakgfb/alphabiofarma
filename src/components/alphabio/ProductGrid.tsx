@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { Heart, Eye, Star, ShoppingCart } from "lucide-react";
 import { ProductDetailModal } from "./ProductDetailModal";
 import { cart } from "@/lib/cart";
 import { catalog, type CatalogFilters } from "@/lib/catalog";
 import { PRODUCTS_DATA } from "@/lib/products-data";
+import { fieldOverrides } from "@/lib/productDescriptionOverrides";
 import { toast } from "sonner";
 
 export type Product = {
@@ -20,7 +21,7 @@ export type Product = {
   stock: number;
 };
 
-export const products: Product[] = PRODUCTS_DATA.map((p) => {
+const baseProducts: Product[] = PRODUCTS_DATA.map((p) => {
   const count = p.price >= 1500 ? 10 : 6;
   return {
     ...p,
@@ -29,6 +30,39 @@ export const products: Product[] = PRODUCTS_DATA.map((p) => {
     installment: { count, value: +(p.price / count).toFixed(2) },
   };
 });
+
+function applyOverride(p: Product): Product {
+  const ov = fieldOverrides.get(p.id);
+  if (!ov) return p;
+  const price = typeof ov.price === "number" ? ov.price : p.price;
+  const oldPrice =
+    ov.oldPrice === null ? undefined : typeof ov.oldPrice === "number" ? ov.oldPrice : p.oldPrice;
+  const image = ov.image ?? p.image;
+  const count = price >= 1500 ? 10 : 6;
+  return { ...p, price, oldPrice, image, installment: { count, value: +(price / count).toFixed(2) } };
+}
+
+// Snapshot estático (sem overrides). Mantido apenas para compatibilidade.
+export const products: Product[] = baseProducts;
+
+function subscribeOverrides(cb: () => void) {
+  return fieldOverrides.subscribe(cb);
+}
+function getSnapshot() {
+  return baseProducts.map(applyOverride);
+}
+function getServerSnapshot() {
+  return baseProducts;
+}
+
+export function useProducts() {
+  return useSyncExternalStore(subscribeOverrides, getSnapshot, getServerSnapshot);
+}
+
+// Esconde a marca quando for "AlphaBio Lab" / "AlphaBio Clinic" (pedido do dono)
+export function shouldShowBrand(brand: string) {
+  return !brand.toLowerCase().startsWith("alphabio");
+}
 
 function Stars({ n }: { n: number }) {
   return (
@@ -90,7 +124,9 @@ export function ProductCard({ p, onOpen }: { p: Product; onOpen: (p: Product) =>
       </div>
 
       <div className="flex flex-col p-3 gap-1.5 flex-1">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{p.brand}</span>
+        {shouldShowBrand(p.brand) && (
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{p.brand}</span>
+        )}
         <h3 className="text-sm font-semibold text-foreground leading-snug line-clamp-2 min-h-[2.5rem] transition-colors duration-300 group-hover:text-primary">
           {p.name}
         </h3>
@@ -133,6 +169,7 @@ export function ProductCard({ p, onOpen }: { p: Product; onOpen: (p: Product) =>
 export function ProductGrid() {
   const [selected, setSelected] = useState<Product | null>(null);
   const [filters, setFilters] = useState<CatalogFilters>(catalog.get());
+  const livePricedProducts = useProducts();
 
   useEffect(() => {
     const unsub = catalog.subscribe(setFilters);
@@ -141,7 +178,7 @@ export function ProductGrid() {
 
   const filtered = useMemo(() => {
     const q = filters.query.trim().toLowerCase();
-    return products.filter((p) => {
+    return livePricedProducts.filter((p) => {
       if (filters.brand !== "Todas" && p.brand !== filters.brand) return false;
       if (filters.priceMax && p.price > filters.priceMax) return false;
       if (q) {
@@ -150,7 +187,12 @@ export function ProductGrid() {
       }
       return true;
     });
-  }, [filters]);
+  }, [filters, livePricedProducts]);
+
+  // mantém o produto selecionado em sincronia com edições
+  const selectedLive = selected
+    ? livePricedProducts.find((p) => p.id === selected.id) ?? selected
+    : null;
 
   return (
     <section id="catalogo" className="mx-auto max-w-7xl px-4 py-8">
@@ -181,7 +223,7 @@ export function ProductGrid() {
         </div>
       )}
 
-      <ProductDetailModal product={selected} onClose={() => setSelected(null)} />
+      <ProductDetailModal product={selectedLive} onClose={() => setSelected(null)} />
     </section>
   );
 }

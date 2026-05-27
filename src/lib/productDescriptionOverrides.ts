@@ -1,48 +1,73 @@
-// Overrides locais (localStorage) para descrições de produto.
-// Permite edição inline sem precisar mudar o código-fonte.
+// Overrides locais (localStorage) para campos editáveis do produto.
+// Inclui descrição, preço e imagem.
 import type { ProductDescription } from "./productDescriptions";
 
-const KEY = "alphabio:productDescriptionOverrides:v1";
+const DESC_KEY = "alphabio:productDescriptionOverrides:v1";
+const FIELDS_KEY = "alphabio:productFieldOverrides:v1";
 
-type Store = Record<string, ProductDescription>;
+type DescStore = Record<string, ProductDescription>;
+export type FieldOverride = { price?: number; oldPrice?: number | null; image?: string };
+type FieldStore = Record<string, FieldOverride>;
 
-function read(): Store {
-  if (typeof window === "undefined") return {};
+function readJson<T>(key: string): T {
+  if (typeof window === "undefined") return {} as T;
   try {
-    return JSON.parse(localStorage.getItem(KEY) || "{}") as Store;
+    return JSON.parse(localStorage.getItem(key) || "{}") as T;
   } catch {
-    return {};
+    return {} as T;
   }
 }
 
-function write(store: Store) {
+function writeJson(key: string, value: unknown) {
   if (typeof window === "undefined") return;
-  localStorage.setItem(KEY, JSON.stringify(store));
-  window.dispatchEvent(new Event("alphabio:descriptions-changed"));
+  localStorage.setItem(key, JSON.stringify(value));
+  window.dispatchEvent(new Event("alphabio:overrides-changed"));
 }
 
 export const descriptionOverrides = {
   get(id: string): ProductDescription | undefined {
-    return read()[id];
+    return readJson<DescStore>(DESC_KEY)[id];
   },
   set(id: string, desc: ProductDescription) {
-    const store = read();
+    const store = readJson<DescStore>(DESC_KEY);
     store[id] = desc;
-    write(store);
+    writeJson(DESC_KEY, store);
   },
   remove(id: string) {
-    const store = read();
+    const store = readJson<DescStore>(DESC_KEY);
     delete store[id];
-    write(store);
+    writeJson(DESC_KEY, store);
   },
-  subscribe(cb: () => void) {
-    if (typeof window === "undefined") return () => {};
-    const handler = () => cb();
-    window.addEventListener("alphabio:descriptions-changed", handler);
-    window.addEventListener("storage", handler);
-    return () => {
-      window.removeEventListener("alphabio:descriptions-changed", handler);
-      window.removeEventListener("storage", handler);
-    };
-  },
+  subscribe,
 };
+
+export const fieldOverrides = {
+  get(id: string): FieldOverride | undefined {
+    return readJson<FieldStore>(FIELDS_KEY)[id];
+  },
+  set(id: string, patch: FieldOverride) {
+    const store = readJson<FieldStore>(FIELDS_KEY);
+    store[id] = { ...store[id], ...patch };
+    writeJson(FIELDS_KEY, store);
+  },
+  remove(id: string) {
+    const store = readJson<FieldStore>(FIELDS_KEY);
+    delete store[id];
+    writeJson(FIELDS_KEY, store);
+  },
+  subscribe,
+};
+
+function subscribe(cb: () => void) {
+  if (typeof window === "undefined") return () => {};
+  const handler = () => cb();
+  window.addEventListener("alphabio:overrides-changed", handler);
+  // legacy event name still supported
+  window.addEventListener("alphabio:descriptions-changed", handler);
+  window.addEventListener("storage", handler);
+  return () => {
+    window.removeEventListener("alphabio:overrides-changed", handler);
+    window.removeEventListener("alphabio:descriptions-changed", handler);
+    window.removeEventListener("storage", handler);
+  };
+}
