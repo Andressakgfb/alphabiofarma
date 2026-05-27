@@ -71,13 +71,14 @@ export function Header() {
 
         <button
           onClick={() => setCepOpen(true)}
-          className="hidden md:inline-flex items-center gap-1.5 px-2 py-1.5 text-sm font-semibold text-foreground hover:text-success transition"
-          aria-label="Definir CEP"
+          className="hidden md:inline-flex items-center gap-1.5 px-2 py-1.5 text-sm font-medium text-foreground hover:text-success transition"
+          aria-label="Informe seu CEP para calcular o frete"
         >
           <MapPin className="h-4 w-4 text-success" />
-          {cep ? cep : "CEP"}
+          {cep ? cep : "Informe seu CEP para calcular o frete"}
           <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
         </button>
+
 
 
         <button
