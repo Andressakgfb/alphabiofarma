@@ -53,7 +53,10 @@ function OrderStatusPage() {
         .eq("id", id)
         .maybeSingle();
       if (!active) return;
-      if (error) setError(error.message);
+      if (error) {
+        console.error("Failed to load order:", error);
+        setError("Erro ao carregar pedido.");
+      }
       else if (!data) setError("Pedido não encontrado.");
       else setOrder(data as OrderRow);
       setLoading(false);
