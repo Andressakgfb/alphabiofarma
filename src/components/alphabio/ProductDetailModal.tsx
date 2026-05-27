@@ -366,7 +366,7 @@ export function ProductDetailModal({
                     As alterações ficam salvas neste navegador.
                   </p>
                 </div>
-              )}
+              ))}
             </div>
 
             <div className="flex items-center gap-3 text-xs text-muted-foreground">
