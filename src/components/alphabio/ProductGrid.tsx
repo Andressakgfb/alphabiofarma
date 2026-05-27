@@ -1,4 +1,7 @@
+import { useState } from "react";
 import { Heart, Eye, Star, ShoppingCart } from "lucide-react";
+import { ProductDetailModal } from "./ProductDetailModal";
+import { toast } from "sonner";
 
 type Product = {
   id: string;
