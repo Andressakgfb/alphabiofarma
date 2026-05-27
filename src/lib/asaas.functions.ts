@@ -91,7 +91,8 @@ export const createAsaasCheckout = createServerFn({ method: "POST" })
       .single();
 
     if (insertErr || !order) {
-      throw new Error(`Falha ao criar pedido: ${insertErr?.message ?? "unknown"}`);
+      console.error("Failed to insert order:", insertErr);
+      throw new Error("Não foi possível criar o pedido. Tente novamente.");
     }
 
     // 3. Create payment in Asaas
