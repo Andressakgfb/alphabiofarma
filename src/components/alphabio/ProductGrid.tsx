@@ -42,22 +42,8 @@ function applyOverride(p: Product): Product {
   return { ...p, price, oldPrice, image, installment: { count, value: +(price / count).toFixed(2) } };
 }
 
-// Compatibilidade: getter dinâmico
-export const products: Product[] = new Proxy(baseProducts, {
-  get(target, prop) {
-    if (prop === "length") return target.length;
-    if (typeof prop === "string" && /^\d+$/.test(prop)) {
-      const idx = Number(prop);
-      const item = target[idx];
-      return item ? applyOverride(item) : item;
-    }
-    if (prop === "map" || prop === "filter" || prop === "find" || prop === "forEach") {
-      const arr = target.map(applyOverride);
-      return (arr as never)[prop as never];
-    }
-    return (target as never)[prop as never];
-  },
-}) as Product[];
+// Snapshot estático (sem overrides). Mantido apenas para compatibilidade.
+export const products: Product[] = baseProducts;
 
 function subscribeOverrides(cb: () => void) {
   return fieldOverrides.subscribe(cb);
