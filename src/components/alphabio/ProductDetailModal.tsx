@@ -271,13 +271,13 @@ export function ProductDetailModal({
                     onClick={() => setEditingFields(true)}
                     className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-border bg-card text-xs font-medium text-foreground hover:bg-surface transition"
                   >
-                    <Pencil className="h-3.5 w-3.5" /> Editar preço e imagem
+                    <Pencil className="h-3.5 w-3.5" /> Editar preço, imagem e estoque
                   </button>
                   {!!fieldOverrides.get(product.id) && (
                     <button
                       onClick={() => {
                         fieldOverrides.remove(product.id);
-                        toast.success("Preço e imagem restaurados");
+                        toast.success("Preço, imagem e estoque restaurados");
                       }}
                       className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-border bg-card text-xs font-medium text-muted-foreground hover:text-foreground transition"
                     >
