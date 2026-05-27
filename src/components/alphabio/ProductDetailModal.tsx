@@ -1,5 +1,6 @@
-import { X, ShoppingCart, ShieldCheck, Truck, Star } from "lucide-react";
+import { X, ShoppingCart, ShieldCheck, Truck, Star, Check } from "lucide-react";
 import { cart } from "@/lib/cart";
+import { productDescriptions } from "@/lib/productDescriptions";
 import { toast } from "sonner";
 
 export type ProductDetail = {
@@ -72,10 +73,32 @@ export function ProductDetailModal({
             </div>
 
             <p className="text-sm text-muted-foreground leading-relaxed">
-              {product.name} da linha {product.brand}. Produto de alta pureza, voltado para
-              pesquisa, performance e bem-estar. Armazenamento refrigerado, lote rastreável e
-              certificado de análise disponível mediante solicitação.
+              {(productDescriptions[product.id]?.intro) ??
+                `${product.name} da linha ${product.brand}. Produto de alta pureza, voltado para pesquisa, performance e bem-estar. Armazenamento refrigerado, lote rastreável e certificado de análise disponível mediante solicitação.`}
             </p>
+
+            {productDescriptions[product.id]?.bullets && (
+              <div className="rounded-xl border border-border bg-surface p-3">
+                {productDescriptions[product.id]?.sectionTitle && (
+                  <p className="text-xs font-semibold uppercase tracking-wider text-foreground mb-2">
+                    {productDescriptions[product.id]?.sectionTitle}
+                  </p>
+                )}
+                <ul className="space-y-1.5">
+                  {productDescriptions[product.id]!.bullets!.map((b) => (
+                    <li key={b} className="flex items-start gap-2 text-xs text-muted-foreground">
+                      <Check className="h-3.5 w-3.5 text-success mt-0.5 flex-shrink-0" />
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+                {productDescriptions[product.id]?.extra && (
+                  <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                    {productDescriptions[product.id]?.extra}
+                  </p>
+                )}
+              </div>
+            )}
 
             <div className="rounded-xl border border-border bg-surface p-3">
               {product.oldPrice && (

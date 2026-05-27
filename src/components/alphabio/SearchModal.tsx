@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { X, Search } from "lucide-react";
+import { catalog } from "@/lib/catalog";
 
 const suggestions = [
   "Tirzepatida",
