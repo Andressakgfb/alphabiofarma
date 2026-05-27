@@ -178,22 +178,24 @@ export function ProductDetailModal({
                   </div>
                 )}
 
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={startEdit}
-                    className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-border bg-card text-xs font-medium text-foreground hover:bg-surface transition"
-                  >
-                    <Pencil className="h-3.5 w-3.5" /> Editar descrição
-                  </button>
-                  {hasOverride && (
+                {isAdmin && (
+                  <div className="flex items-center gap-2">
                     <button
-                      onClick={reset}
-                      className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-border bg-card text-xs font-medium text-muted-foreground hover:text-foreground transition"
+                      onClick={startEdit}
+                      className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-border bg-card text-xs font-medium text-foreground hover:bg-surface transition"
                     >
-                      <RotateCcw className="h-3.5 w-3.5" /> Restaurar padrão
+                      <Pencil className="h-3.5 w-3.5" /> Editar descrição
                     </button>
-                  )}
-                </div>
+                    {hasOverride && (
+                      <button
+                        onClick={reset}
+                        className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-border bg-card text-xs font-medium text-muted-foreground hover:text-foreground transition"
+                      >
+                        <RotateCcw className="h-3.5 w-3.5" /> Restaurar padrão
+                      </button>
+                    )}
+                  </div>
+                )}
               </>
             ) : (
               <div className="flex flex-col gap-2 rounded-xl border border-primary/40 bg-surface p-3">
