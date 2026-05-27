@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import { Portal } from "./Portal";
+import { CheckoutModal } from "./CheckoutModal";
+import { AuthModal } from "./AuthModal";
 import { X, Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { cart, cartTotal, type CartItem } from "@/lib/cart";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export function CartModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -16,6 +21,17 @@ export function CartModal({ open, onClose }: { open: boolean; onClose: () => voi
   if (!open) return null;
 
   const total = cartTotal(items);
+
+  async function handleCheckout() {
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) {
+      toast.info("Faça login para finalizar a compra");
+      setAuthOpen(true);
+      return;
+    }
+    setCheckoutOpen(true);
+  }
+
 
   return (
     <Portal>
