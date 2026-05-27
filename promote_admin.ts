@@ -6,7 +6,12 @@ const supabaseAdmin = createClient(
 )
 
 async function promote() {
-  const email = 'andressa123aparecida@gmail.com'
+  const email = process.env.ADMIN_EMAIL || process.argv[2]
+  if (!email) {
+    console.error('Usage: bun promote_admin.ts <email>  (or set ADMIN_EMAIL env var)')
+    process.exit(1)
+  }
+
   const { data: users, error: listErr } = await supabaseAdmin.auth.admin.listUsers()
   if (listErr) {
     console.error('Erro ao listar usuários:', listErr)
@@ -14,7 +19,7 @@ async function promote() {
   }
   const user = users.users.find((u: any) => u.email === email)
   if (!user) {
-    console.error('Usuário não encontrado:', email)
+    console.error('Usuário não encontrado')
     process.exit(1)
   }
   console.log('User ID:', user.id)
