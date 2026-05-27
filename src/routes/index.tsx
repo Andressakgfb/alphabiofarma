@@ -51,10 +51,12 @@ function Index() {
       <main>
         <Hero />
         <SmartSearch />
+        <BestSellers />
         <Filters />
         <ProductGrid />
       </main>
       <Footer />
+      <WhatsAppFab />
     </div>
   );
 }
