@@ -5,6 +5,7 @@ import { cart } from "@/lib/cart";
 import { productDescriptions, type ProductDescription } from "@/lib/productDescriptions";
 import { descriptionOverrides, fieldOverrides } from "@/lib/productDescriptionOverrides";
 import { shouldShowBrand } from "./ProductGrid";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { toast } from "sonner";
 
 export type ProductDetail = {
@@ -40,6 +41,7 @@ export function ProductDetailModal({
   const [desc, setDesc] = useState<ProductDescription | undefined>(undefined);
   const [draft, setDraft] = useState<ProductDescription>({ intro: "" });
   const [, force] = useState(0);
+  const { isAdmin } = useIsAdmin();
 
   useEffect(() => {
     if (!product) return;
@@ -176,22 +178,24 @@ export function ProductDetailModal({
                   </div>
                 )}
 
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={startEdit}
-                    className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-border bg-card text-xs font-medium text-foreground hover:bg-surface transition"
-                  >
-                    <Pencil className="h-3.5 w-3.5" /> Editar descrição
-                  </button>
-                  {hasOverride && (
+                {isAdmin && (
+                  <div className="flex items-center gap-2">
                     <button
-                      onClick={reset}
-                      className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-border bg-card text-xs font-medium text-muted-foreground hover:text-foreground transition"
+                      onClick={startEdit}
+                      className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-border bg-card text-xs font-medium text-foreground hover:bg-surface transition"
                     >
-                      <RotateCcw className="h-3.5 w-3.5" /> Restaurar padrão
+                      <Pencil className="h-3.5 w-3.5" /> Editar descrição
                     </button>
-                  )}
-                </div>
+                    {hasOverride && (
+                      <button
+                        onClick={reset}
+                        className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-border bg-card text-xs font-medium text-muted-foreground hover:text-foreground transition"
+                      >
+                        <RotateCcw className="h-3.5 w-3.5" /> Restaurar padrão
+                      </button>
+                    )}
+                  </div>
+                )}
               </>
             ) : (
               <div className="flex flex-col gap-2 rounded-xl border border-primary/40 bg-surface p-3">
@@ -259,7 +263,7 @@ export function ProductDetailModal({
                 ou {product.installment.count}x de R$ {product.installment.value.toFixed(2).replace(".", ",")} sem juros
               </p>
 
-              {!editingFields ? (
+              {isAdmin && (!editingFields ? (
                 <div className="flex items-center gap-2 mt-3">
                   <button
                     onClick={() => setEditingFields(true)}
@@ -362,7 +366,7 @@ export function ProductDetailModal({
                     As alterações ficam salvas neste navegador.
                   </p>
                 </div>
-              )}
+              ))}
             </div>
 
             <div className="flex items-center gap-3 text-xs text-muted-foreground">
