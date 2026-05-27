@@ -33,6 +33,10 @@ export function ProductDetailModal({
   onClose: () => void;
 }) {
   const [editing, setEditing] = useState(false);
+  const [editingFields, setEditingFields] = useState(false);
+  const [priceDraft, setPriceDraft] = useState("");
+  const [oldPriceDraft, setOldPriceDraft] = useState("");
+  const [imageDraft, setImageDraft] = useState("");
   const [desc, setDesc] = useState<ProductDescription | undefined>(undefined);
   const [draft, setDraft] = useState<ProductDescription>({ intro: "" });
   const [, force] = useState(0);
@@ -40,7 +44,11 @@ export function ProductDetailModal({
   useEffect(() => {
     if (!product) return;
     setEditing(false);
+    setEditingFields(false);
     setDesc(getDescription(product.id));
+    setPriceDraft(String(product.price));
+    setOldPriceDraft(product.oldPrice ? String(product.oldPrice) : "");
+    setImageDraft(product.image);
   }, [product]);
 
   useEffect(() => {
