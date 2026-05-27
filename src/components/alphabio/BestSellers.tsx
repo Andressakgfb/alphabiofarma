@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Flame } from "lucide-react";
-import { ProductCard, products, type Product } from "./ProductGrid";
+import { ProductCard, useProducts, type Product } from "./ProductGrid";
 import { ProductDetailModal } from "./ProductDetailModal";
 
 const FEATURED_IDS = [
@@ -14,12 +14,13 @@ const FEATURED_IDS = [
   "ghkcu50d",
 ];
 
-const featured = FEATURED_IDS
-  .map((id) => products.find((p) => p.id === id))
-  .filter(Boolean) as Product[];
-
 export function BestSellers() {
   const [selected, setSelected] = useState<Product | null>(null);
+  const all = useProducts();
+  const featured = FEATURED_IDS
+    .map((id) => all.find((p) => p.id === id))
+    .filter(Boolean) as Product[];
+  const selectedLive = selected ? all.find((p) => p.id === selected.id) ?? selected : null;
 
   return (
     <section className="mx-auto max-w-7xl px-4 pt-6 pb-2">
@@ -39,7 +40,7 @@ export function BestSellers() {
         ))}
       </div>
 
-      <ProductDetailModal product={selected} onClose={() => setSelected(null)} />
+      <ProductDetailModal product={selectedLive} onClose={() => setSelected(null)} />
     </section>
   );
 }
