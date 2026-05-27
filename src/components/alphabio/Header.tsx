@@ -2,14 +2,21 @@ import { useEffect, useState } from "react";
 import { Search, MapPin, User, ShoppingCart, Menu, LogOut } from "lucide-react";
 import logo from "@/assets/logo-alphabio.png";
 import { AuthModal } from "./AuthModal";
+import { CepModal } from "./CepModal";
+import { SearchModal } from "./SearchModal";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export function Header() {
   const [authOpen, setAuthOpen] = useState(false);
+  const [cepOpen, setCepOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [cep, setCep] = useState<string>("");
 
   useEffect(() => {
+    const stored = typeof window !== "undefined" ? localStorage.getItem("alphabio_cep") : null;
+    if (stored) setCep(stored);
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
       setUserEmail(session?.user?.email ?? null);
     });
@@ -22,6 +29,13 @@ export function Header() {
     toast.success("Você saiu da conta");
   };
 
+  const handleSaveCep = (newCep: string) => {
+    setCep(newCep);
+    try { localStorage.setItem("alphabio_cep", newCep); } catch {}
+  };
+
+  const cepLabel = cep || "00000-000";
+
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
       <div className="mx-auto max-w-7xl px-4 h-14 flex items-center gap-3">
@@ -33,14 +47,21 @@ export function Header() {
         </a>
 
         <div className="hidden md:flex flex-1 items-center gap-2 ml-4">
-          <button className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground">
-            <MapPin className="h-4 w-4" /> Enviar para 00000-000
+          <button
+            onClick={() => setCepOpen(true)}
+            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+          >
+            <MapPin className="h-4 w-4" /> Enviar para {cepLabel}
           </button>
         </div>
 
         <div className="flex-1 md:hidden" />
 
-        <button aria-label="Buscar" className="p-2 text-foreground/70 hover:text-foreground">
+        <button
+          onClick={() => setSearchOpen(true)}
+          aria-label="Buscar"
+          className="p-2 text-foreground/70 hover:text-foreground"
+        >
           <Search className="h-5 w-5" />
         </button>
 
@@ -69,12 +90,18 @@ export function Header() {
         </button>
       </div>
 
-      <div className="md:hidden border-t border-border bg-surface px-4 py-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+      <button
+        onClick={() => setCepOpen(true)}
+        className="md:hidden w-full border-t border-border bg-surface px-4 py-1.5 flex items-center gap-1.5 text-xs text-muted-foreground"
+      >
         <MapPin className="h-3.5 w-3.5 text-success" />
-        Enviar para <span className="font-medium text-foreground">00000-000</span>
-      </div>
+        Enviar para <span className="font-medium text-foreground">{cepLabel}</span>
+        <span className="ml-auto text-primary font-semibold">Alterar</span>
+      </button>
 
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
+      <CepModal open={cepOpen} initialCep={cep} onClose={() => setCepOpen(false)} onSave={handleSaveCep} />
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 }
