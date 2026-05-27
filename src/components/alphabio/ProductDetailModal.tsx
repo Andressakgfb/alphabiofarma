@@ -1,4 +1,5 @@
 import { X, ShoppingCart, ShieldCheck, Truck, Star, Check } from "lucide-react";
+import { Portal } from "./Portal";
 import { cart } from "@/lib/cart";
 import { productDescriptions } from "@/lib/productDescriptions";
 import { toast } from "sonner";
@@ -28,6 +29,7 @@ export function ProductDetailModal({
   const outOfStock = product.stock === 0;
 
   return (
+    <Portal>
     <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50 backdrop-blur-sm p-3 sm:p-6 overflow-y-auto animate-fade-in">
       <div className="relative w-full max-w-3xl mt-6 sm:mt-10 rounded-2xl bg-card shadow-2xl overflow-hidden animate-scale-in">
         <button
@@ -134,5 +136,6 @@ export function ProductDetailModal({
         </div>
       </div>
     </div>
+    </Portal>
   );
 }
