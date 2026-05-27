@@ -121,28 +121,48 @@ export function SmartSearch() {
         {open && (
           <div className="absolute left-4 right-4 mt-2 rounded-xl border border-border bg-card shadow-lg p-4 z-30 animate-fade-in">
             {open === "cat" && (
-              <ul className="space-y-1.5">
-                {CATEGORIES.map((c) => (
-                  <li key={c}>
-                    <label className="flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-success">
-                      <input type="radio" name="cat" checked={category === c} onChange={() => { setCategory(c); setOpen(null); }} className="accent-success h-3.5 w-3.5" />
-                      {c}
-                    </label>
-                  </li>
-                ))}
-              </ul>
+              <>
+                <ul className="space-y-1.5">
+                  {categories.map((c) => (
+                    <li key={c}>
+                      <label className="flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-success">
+                        <input type="radio" name="cat" checked={category === c} onChange={() => { setCategory(c); setOpen(null); }} className="accent-success h-3.5 w-3.5" />
+                        {c}
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+                {isAdmin && (
+                  <button
+                    onClick={() => { setEditing("category"); setOpen(null); }}
+                    className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-primary hover:underline"
+                  >
+                    <Pencil className="h-3 w-3" /> Editar categorias
+                  </button>
+                )}
+              </>
             )}
             {open === "brand" && (
-              <ul className="space-y-1.5">
-                {BRANDS.map((b) => (
-                  <li key={b}>
-                    <label className="flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-success">
-                      <input type="radio" name="brand" checked={brand === b} onChange={() => { setBrand(b); setOpen(null); }} className="accent-success h-3.5 w-3.5" />
-                      {b}
-                    </label>
-                  </li>
-                ))}
-              </ul>
+              <>
+                <ul className="space-y-1.5">
+                  {brands.map((b) => (
+                    <li key={b}>
+                      <label className="flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-success">
+                        <input type="radio" name="brand" checked={brand === b} onChange={() => { setBrand(b); setOpen(null); }} className="accent-success h-3.5 w-3.5" />
+                        {b}
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+                {isAdmin && (
+                  <button
+                    onClick={() => { setEditing("brand"); setOpen(null); }}
+                    className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-primary hover:underline"
+                  >
+                    <Pencil className="h-3 w-3" /> Editar marcas
+                  </button>
+                )}
+              </>
             )}
             {open === "price" && (
               <div>
