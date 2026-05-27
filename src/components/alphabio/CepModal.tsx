@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Portal } from "./Portal";
 import { X, MapPin, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -51,6 +52,7 @@ export function CepModal({
   };
 
   return (
+    <Portal>
     <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6 overflow-y-auto animate-fade-in">
       <div className="relative w-full max-w-md mt-10 rounded-2xl bg-card shadow-2xl overflow-hidden animate-scale-in">
         <div className="bg-primary text-primary-foreground px-5 py-4 flex items-start justify-between">
@@ -98,5 +100,6 @@ export function CepModal({
         </form>
       </div>
     </div>
+    </Portal>
   );
 }

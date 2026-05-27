@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Portal } from "./Portal";
 import { X, Search } from "lucide-react";
 import { catalog } from "@/lib/catalog";
 
@@ -41,6 +42,7 @@ export function SearchModal({
   };
 
   return (
+    <Portal>
     <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6 overflow-y-auto animate-fade-in">
       <div className="relative w-full max-w-xl mt-10 rounded-2xl bg-card shadow-2xl overflow-hidden animate-scale-in">
         <div className="px-5 py-4 flex items-center justify-between border-b border-border">
@@ -88,5 +90,6 @@ export function SearchModal({
         </form>
       </div>
     </div>
+    </Portal>
   );
 }
