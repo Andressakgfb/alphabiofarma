@@ -41,6 +41,7 @@ export function ProductDetailModal({
   const [desc, setDesc] = useState<ProductDescription | undefined>(undefined);
   const [draft, setDraft] = useState<ProductDescription>({ intro: "" });
   const [, force] = useState(0);
+  const { isAdmin } = useIsAdmin();
 
   useEffect(() => {
     if (!product) return;
