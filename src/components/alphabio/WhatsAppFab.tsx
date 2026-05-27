@@ -1,7 +1,7 @@
 import { MessageCircle } from "lucide-react";
 
 export function WhatsAppFab() {
-  const phone = "5511999999999"; // placeholder — atualize quando tiver o número oficial
+  const phone = "5567996959662";
   const msg = encodeURIComponent("Olá! Vim pelo site AlphaBio Farma e gostaria de mais informações.");
   return (
     <a
