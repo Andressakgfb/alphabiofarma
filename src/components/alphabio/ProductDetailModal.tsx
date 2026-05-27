@@ -126,7 +126,9 @@ export function ProductDetailModal({
           </div>
 
           <div className="p-5 sm:p-6 flex flex-col gap-3">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{product.brand}</span>
+            {shouldShowBrand(product.brand) && (
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{product.brand}</span>
+            )}
             <h2 className="text-xl font-bold text-foreground leading-snug">{product.name}</h2>
 
             <div className="flex items-center gap-1.5">
