@@ -263,7 +263,7 @@ export function ProductDetailModal({
                 ou {product.installment.count}x de R$ {product.installment.value.toFixed(2).replace(".", ",")} sem juros
               </p>
 
-              {!editingFields ? (
+              {isAdmin && (!editingFields ? (
                 <div className="flex items-center gap-2 mt-3">
                   <button
                     onClick={() => setEditingFields(true)}
