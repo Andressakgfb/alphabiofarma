@@ -38,8 +38,10 @@ function applyOverride(p: Product): Product {
   const oldPrice =
     ov.oldPrice === null ? undefined : typeof ov.oldPrice === "number" ? ov.oldPrice : p.oldPrice;
   const image = ov.image ?? p.image;
+  const stock = typeof ov.stock === "number" ? ov.stock : p.stock;
+  const tag = stock === 0 ? "Esgotado" : p.tag === "Esgotado" ? undefined : p.tag;
   const count = price >= 1500 ? 10 : 6;
-  return { ...p, price, oldPrice, image, installment: { count, value: +(price / count).toFixed(2) } };
+  return { ...p, price, oldPrice, image, stock, tag, installment: { count, value: +(price / count).toFixed(2) } };
 }
 
 // Snapshot estático (sem overrides). Mantido apenas para compatibilidade.
