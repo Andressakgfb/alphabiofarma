@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { X, Search } from "lucide-react";
+import { catalog } from "@/lib/catalog";
 
 const suggestions = [
   "Tirzepatida",
@@ -29,18 +30,13 @@ export function SearchModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const term = q.trim().toLowerCase();
+    const term = q.trim();
     if (!term) return;
-    // Look for matching card on the page and scroll to it
-    const cards = document.querySelectorAll<HTMLElement>("[data-product-name]");
-    const match = Array.from(cards).find((el) =>
-      (el.dataset.productName || "").toLowerCase().includes(term),
-    );
-    if (match) {
-      match.scrollIntoView({ behavior: "smooth", block: "center" });
-      match.classList.add("ring-2", "ring-primary");
-      setTimeout(() => match.classList.remove("ring-2", "ring-primary"), 1800);
-    }
+    catalog.set({ query: term });
+    setTimeout(() => {
+      const el = document.getElementById("catalogo");
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
     onClose();
   };
 
