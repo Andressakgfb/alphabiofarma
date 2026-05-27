@@ -1,4 +1,7 @@
+import { useState } from "react";
 import { Heart, Eye, Star, ShoppingCart } from "lucide-react";
+import { ProductDetailModal } from "./ProductDetailModal";
+import { toast } from "sonner";
 
 type Product = {
   id: string;
@@ -69,10 +72,14 @@ function Stars({ n }: { n: number }) {
   );
 }
 
-function ProductCard({ p }: { p: Product }) {
+function ProductCard({ p, onOpen }: { p: Product; onOpen: (p: Product) => void }) {
   const outOfStock = p.stock === 0;
   return (
-    <article className="group relative flex flex-col rounded-2xl border border-border bg-card overflow-hidden shadow-[var(--shadow-card)] transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.18)] hover:border-primary/30">
+    <article
+      data-product-name={p.name}
+      onClick={() => onOpen(p)}
+      className="group relative flex flex-col rounded-2xl border border-border bg-card overflow-hidden shadow-[var(--shadow-card)] transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.18)] hover:border-primary/30 cursor-pointer"
+    >
       <div className="relative aspect-square bg-surface overflow-hidden">
         <img
           src={p.image}
@@ -94,10 +101,18 @@ function ProductCard({ p }: { p: Product }) {
         )}
 
         <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5">
-          <button aria-label="Favoritar" className="h-8 w-8 rounded-full bg-card/95 backdrop-blur flex items-center justify-center text-foreground/70 hover:text-destructive transition shadow-sm">
+          <button
+            aria-label="Favoritar"
+            onClick={(e) => { e.stopPropagation(); toast.success("Adicionado aos favoritos"); }}
+            className="h-8 w-8 rounded-full bg-card/95 backdrop-blur flex items-center justify-center text-foreground/70 hover:text-destructive transition shadow-sm"
+          >
             <Heart className="h-4 w-4" />
           </button>
-          <button aria-label="Visualização rápida" className="h-8 w-8 rounded-full bg-card/95 backdrop-blur flex items-center justify-center text-foreground/70 hover:text-primary transition shadow-sm opacity-0 group-hover:opacity-100">
+          <button
+            aria-label="Visualização rápida"
+            onClick={(e) => { e.stopPropagation(); onOpen(p); }}
+            className="h-8 w-8 rounded-full bg-card/95 backdrop-blur flex items-center justify-center text-foreground/70 hover:text-primary transition shadow-sm opacity-0 group-hover:opacity-100"
+          >
             <Eye className="h-4 w-4" />
           </button>
         </div>
@@ -129,6 +144,10 @@ function ProductCard({ p }: { p: Product }) {
 
         <button
           disabled={outOfStock}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!outOfStock) toast.success(`${p.name} adicionado ao carrinho`);
+          }}
           className="mt-2 inline-flex items-center justify-center gap-1.5 h-9 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
         >
           <ShoppingCart className="h-3.5 w-3.5" /> {outOfStock ? "Indisponível" : "Adicionar"}
@@ -139,6 +158,8 @@ function ProductCard({ p }: { p: Product }) {
 }
 
 export function ProductGrid() {
+  const [selected, setSelected] = useState<Product | null>(null);
+
   return (
     <section className="mx-auto max-w-7xl px-4 py-8">
       <div className="flex items-end justify-between mb-4">
@@ -151,9 +172,11 @@ export function ProductGrid() {
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
         {products.map((p) => (
-          <ProductCard key={p.id} p={p} />
+          <ProductCard key={p.id} p={p} onOpen={setSelected} />
         ))}
       </div>
+
+      <ProductDetailModal product={selected} onClose={() => setSelected(null)} />
     </section>
   );
 }
