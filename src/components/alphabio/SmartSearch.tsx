@@ -1,6 +1,26 @@
-import { useEffect, useRef, useState } from "react";
-import { Search, Tag, Building2, DollarSign, X } from "lucide-react";
-import { catalog, CATEGORIES, BRANDS } from "@/lib/catalog";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { Search, Tag, Building2, DollarSign, X, Pencil } from "lucide-react";
+import { catalog } from "@/lib/catalog";
+import { siteSettings } from "@/lib/siteSettings";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
+import { TaxonomyEditModal } from "./TaxonomyEditModal";
+
+function useTaxonomy() {
+  const cats = useSyncExternalStore(
+    siteSettings.subscribe,
+    () => JSON.stringify(siteSettings.getCategories()),
+    () => "[]"
+  );
+  const brs = useSyncExternalStore(
+    siteSettings.subscribe,
+    () => JSON.stringify(siteSettings.getBrands()),
+    () => "[]"
+  );
+  return {
+    categories: ["Todas", ...(JSON.parse(cats) as string[])],
+    brands: ["Todas", ...(JSON.parse(brs) as string[])],
+  };
+}
 
 export function SmartSearch() {
   const [open, setOpen] = useState<null | "cat" | "brand" | "price">(null);
