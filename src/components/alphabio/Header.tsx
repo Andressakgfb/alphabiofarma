@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Search, MapPin, User, ShoppingCart, Menu, LogOut } from "lucide-react";
+import { Search, MapPin, User, ShoppingCart, LogOut, ChevronDown } from "lucide-react";
 import logo from "@/assets/logo-alphabio.png";
 import { AuthModal } from "./AuthModal";
 import { CepModal } from "./CepModal";
@@ -49,23 +49,36 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
       <div className="mx-auto max-w-7xl px-4 h-14 flex items-center gap-3">
-        <button aria-label="Menu" className="md:hidden p-1.5 -ml-1 text-foreground">
-          <Menu className="h-5 w-5" />
-        </button>
         <a href="/" className="flex items-center" aria-label="AlphaBio Farma">
           <img src={logo} alt="AlphaBio Farma" className="h-9 w-auto" />
         </a>
 
-        <div className="hidden md:flex flex-1 items-center gap-2 ml-4">
+        <div className="hidden md:flex flex-1 items-center ml-4">
           <button
-            onClick={() => setCepOpen(true)}
-            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+            onClick={() => {
+              const el = document.getElementById("catalogo");
+              if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+              setSearchOpen(true);
+            }}
+            className="group relative w-full max-w-xl h-10 rounded-full border border-border bg-surface pl-10 pr-4 text-left text-sm text-muted-foreground hover:border-success hover:text-foreground transition"
           >
-            <MapPin className="h-4 w-4" /> Enviar para {cepLabel}
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-hover:text-success" />
+            O que você procura hoje?
           </button>
         </div>
 
         <div className="flex-1 md:hidden" />
+
+        <button
+          onClick={() => setCepOpen(true)}
+          className="hidden md:inline-flex items-center gap-1.5 px-2 py-1.5 text-sm font-semibold text-foreground hover:text-success transition"
+          aria-label="Definir CEP"
+        >
+          <MapPin className="h-4 w-4 text-success" />
+          {cep ? cep : "CEP"}
+          <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+        </button>
+
 
         <button
           onClick={() => setSearchOpen(true)}
