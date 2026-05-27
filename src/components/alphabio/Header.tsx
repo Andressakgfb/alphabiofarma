@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Search, MapPin, User, ShoppingCart, Menu, LogOut } from "lucide-react";
+import { Search, MapPin, User, ShoppingCart, LogOut, ChevronDown } from "lucide-react";
 import logo from "@/assets/logo-alphabio.png";
 import { AuthModal } from "./AuthModal";
 import { CepModal } from "./CepModal";
