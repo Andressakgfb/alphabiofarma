@@ -45,11 +45,18 @@ function applyOverride(p: Product): Product {
 // Snapshot estático (sem overrides). Mantido apenas para compatibilidade.
 export const products: Product[] = baseProducts;
 
+let cachedSnapshot: Product[] = baseProducts.map(applyOverride);
+function recomputeSnapshot() {
+  cachedSnapshot = baseProducts.map(applyOverride);
+}
 function subscribeOverrides(cb: () => void) {
-  return fieldOverrides.subscribe(cb);
+  return fieldOverrides.subscribe(() => {
+    recomputeSnapshot();
+    cb();
+  });
 }
 function getSnapshot() {
-  return baseProducts.map(applyOverride);
+  return cachedSnapshot;
 }
 function getServerSnapshot() {
   return baseProducts;
@@ -58,6 +65,7 @@ function getServerSnapshot() {
 export function useProducts() {
   return useSyncExternalStore(subscribeOverrides, getSnapshot, getServerSnapshot);
 }
+
 
 // Esconde a marca quando for "AlphaBio Lab" / "AlphaBio Clinic" (pedido do dono)
 export function shouldShowBrand(brand: string) {
