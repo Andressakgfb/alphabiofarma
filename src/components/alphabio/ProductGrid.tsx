@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Heart, Eye, Star, ShoppingCart } from "lucide-react";
 import { ProductDetailModal } from "./ProductDetailModal";
+import { cart } from "@/lib/cart";
 import { toast } from "sonner";
 
 type Product = {
@@ -146,7 +147,9 @@ function ProductCard({ p, onOpen }: { p: Product; onOpen: (p: Product) => void }
           disabled={outOfStock}
           onClick={(e) => {
             e.stopPropagation();
-            if (!outOfStock) toast.success(`${p.name} adicionado ao carrinho`);
+            if (outOfStock) return;
+            cart.add({ id: p.id, name: p.name, brand: p.brand, image: p.image, price: p.price });
+            toast.success(`${p.name} adicionado ao carrinho`);
           }}
           className="mt-2 inline-flex items-center justify-center gap-1.5 h-9 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
         >
