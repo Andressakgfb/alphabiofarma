@@ -1,5 +1,5 @@
-import { ShieldCheck, Truck, CreditCard, BadgePercent, Sparkles } from "lucide-react";
-import bannerHero from "@/assets/banner-hero.jpg";
+import { ShieldCheck, Truck, CreditCard, BadgePercent } from "lucide-react";
+import bannerHero from "@/assets/banner-hero.png";
 
 const benefits = [
   { icon: ShieldCheck, label: "Compra 100% segura", sub: "Pagamento criptografado" },
@@ -12,30 +12,13 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden">
       <div className="relative mx-auto max-w-7xl px-4 pt-4 sm:pt-6">
-        <div className="relative w-full rounded-2xl overflow-hidden shadow-[var(--shadow-card)]">
-          <img
-            src={bannerHero}
-            alt="Bem-vindo à AlphaBio — produtos selecionados com entrega rápida e pagamento 100% seguro"
-            className="w-full h-auto block"
-            loading="eager"
-            fetchPriority="high"
-            width={1920}
-            height={640}
-          />
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/80 backdrop-blur px-3 py-1 text-[11px] sm:text-xs font-medium text-primary shadow-sm">
-              <Sparkles className="h-3.5 w-3.5" />
-              Loja oficial · Compra segura
-            </span>
-            <h1 className="mt-3 sm:mt-4 font-bold leading-[0.95] tracking-tight">
-              <span className="block text-3xl sm:text-5xl md:text-6xl text-foreground/80">Bem-vindo à</span>
-              <span className="block text-4xl sm:text-6xl md:text-7xl text-primary">AlphaBio</span>
-            </h1>
-            <p className="mt-3 sm:mt-4 max-w-2xl text-xs sm:text-sm md:text-base text-foreground/80">
-              Produtos selecionados com entrega rápida e pagamento 100% seguro.
-            </p>
-          </div>
-        </div>
+        <img
+          src={bannerHero}
+          alt="Bem-vindo à AlphaBio — produtos selecionados com entrega rápida e pagamento 100% seguro"
+          className="w-full h-auto block rounded-2xl shadow-[var(--shadow-card)]"
+          loading="eager"
+          fetchPriority="high"
+        />
       </div>
 
       {/* benefits strip */}
