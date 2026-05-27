@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import { Portal } from "./Portal";
+import { CheckoutModal } from "./CheckoutModal";
+import { AuthModal } from "./AuthModal";
 import { X, Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { cart, cartTotal, type CartItem } from "@/lib/cart";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export function CartModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -17,7 +22,19 @@ export function CartModal({ open, onClose }: { open: boolean; onClose: () => voi
 
   const total = cartTotal(items);
 
+  async function handleCheckout() {
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) {
+      toast.info("Faça login para finalizar a compra");
+      setAuthOpen(true);
+      return;
+    }
+    setCheckoutOpen(true);
+  }
+
+
   return (
+    <>
     <Portal>
     <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50 backdrop-blur-sm p-3 sm:p-6 overflow-y-auto animate-fade-in">
       <div className="relative w-full max-w-lg mt-6 sm:mt-10 rounded-2xl bg-card shadow-2xl overflow-hidden animate-scale-in">
@@ -98,11 +115,7 @@ export function CartModal({ open, onClose }: { open: boolean; onClose: () => voi
                 </span>
               </div>
               <button
-                onClick={() => {
-                  toast.success("Pedido enviado para o checkout");
-                  cart.clear();
-                  onClose();
-                }}
+                onClick={handleCheckout}
                 className="w-full h-11 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90"
               >
                 Finalizar compra
@@ -119,5 +132,16 @@ export function CartModal({ open, onClose }: { open: boolean; onClose: () => voi
       </div>
     </div>
     </Portal>
+    <CheckoutModal
+      open={checkoutOpen}
+      items={items}
+      onClose={() => setCheckoutOpen(false)}
+      onRequireLogin={() => {
+        setCheckoutOpen(false);
+        setAuthOpen(true);
+      }}
+    />
+    <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
+    </>
   );
 }
