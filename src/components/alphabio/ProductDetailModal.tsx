@@ -1,4 +1,5 @@
 import { X, ShoppingCart, ShieldCheck, Truck, Star } from "lucide-react";
+import { cart } from "@/lib/cart";
 import { toast } from "sonner";
 
 export type ProductDetail = {
