@@ -5,6 +5,7 @@ import { cart } from "@/lib/cart";
 import { productDescriptions, type ProductDescription } from "@/lib/productDescriptions";
 import { descriptionOverrides, fieldOverrides } from "@/lib/productDescriptionOverrides";
 import { shouldShowBrand } from "./ProductGrid";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { toast } from "sonner";
 
 export type ProductDetail = {
