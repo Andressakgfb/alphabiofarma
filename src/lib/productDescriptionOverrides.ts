@@ -6,7 +6,7 @@ const DESC_KEY = "alphabio:productDescriptionOverrides:v1";
 const FIELDS_KEY = "alphabio:productFieldOverrides:v1";
 
 type DescStore = Record<string, ProductDescription>;
-export type FieldOverride = { price?: number; oldPrice?: number | null; image?: string };
+export type FieldOverride = { price?: number; oldPrice?: number | null; image?: string; stock?: number };
 type FieldStore = Record<string, FieldOverride>;
 
 function readJson<T>(key: string): T {
