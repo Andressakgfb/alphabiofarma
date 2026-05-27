@@ -191,6 +191,11 @@ export function SmartSearch() {
           </div>
         )}
       </div>
+      <TaxonomyEditModal
+        open={editing !== null}
+        kind={editing ?? "category"}
+        onClose={() => setEditing(null)}
+      />
     </section>
   );
 }
