@@ -1,7 +1,9 @@
-import { X, ShoppingCart, ShieldCheck, Truck, Star, Check } from "lucide-react";
+import { useEffect, useState } from "react";
+import { X, ShoppingCart, ShieldCheck, Truck, Star, Check, Pencil, Save, RotateCcw } from "lucide-react";
 import { Portal } from "./Portal";
 import { cart } from "@/lib/cart";
-import { productDescriptions } from "@/lib/productDescriptions";
+import { productDescriptions, type ProductDescription } from "@/lib/productDescriptions";
+import { descriptionOverrides } from "@/lib/productDescriptionOverrides";
 import { toast } from "sonner";
 
 export type ProductDetail = {
@@ -18,6 +20,10 @@ export type ProductDetail = {
   stock: number;
 };
 
+function getDescription(id: string): ProductDescription | undefined {
+  return descriptionOverrides.get(id) ?? productDescriptions[id];
+}
+
 export function ProductDetailModal({
   product,
   onClose,
@@ -25,8 +31,62 @@ export function ProductDetailModal({
   product: ProductDetail | null;
   onClose: () => void;
 }) {
+  const [editing, setEditing] = useState(false);
+  const [desc, setDesc] = useState<ProductDescription | undefined>(undefined);
+  const [draft, setDraft] = useState<ProductDescription>({ intro: "" });
+  const [, force] = useState(0);
+
+  useEffect(() => {
+    if (!product) return;
+    setEditing(false);
+    setDesc(getDescription(product.id));
+  }, [product]);
+
+  useEffect(() => {
+    const unsub = descriptionOverrides.subscribe(() => force((n) => n + 1));
+    return () => unsub();
+  }, []);
+
   if (!product) return null;
   const outOfStock = product.stock === 0;
+  const hasOverride = !!descriptionOverrides.get(product.id);
+  const current = desc ?? {
+    intro: `${product.name} da linha ${product.brand}. Produto de alta pureza, voltado para pesquisa, performance e bem-estar.`,
+  };
+
+  const startEdit = () => {
+    setDraft({
+      intro: current.intro ?? "",
+      sectionTitle: current.sectionTitle ?? "",
+      bullets: current.bullets ? [...current.bullets] : [],
+      extra: current.extra ?? "",
+    });
+    setEditing(true);
+  };
+
+  const save = () => {
+    const cleaned: ProductDescription = {
+      intro: draft.intro.trim(),
+      sectionTitle: draft.sectionTitle?.trim() || undefined,
+      bullets: (draft.bullets ?? []).map((b) => b.trim()).filter(Boolean),
+      extra: draft.extra?.trim() || undefined,
+    };
+    if (!cleaned.intro) {
+      toast.error("A introdução não pode ficar vazia");
+      return;
+    }
+    descriptionOverrides.set(product.id, cleaned);
+    setDesc(cleaned);
+    setEditing(false);
+    toast.success("Descrição atualizada");
+  };
+
+  const reset = () => {
+    descriptionOverrides.remove(product.id);
+    setDesc(productDescriptions[product.id]);
+    setEditing(false);
+    toast.success("Descrição restaurada para o padrão");
+  };
 
   return (
     <Portal>
@@ -74,31 +134,104 @@ export function ProductDetailModal({
               </span>
             </div>
 
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              {(productDescriptions[product.id]?.intro) ??
-                `${product.name} da linha ${product.brand}. Produto de alta pureza, voltado para pesquisa, performance e bem-estar. Armazenamento refrigerado, lote rastreável e certificado de análise disponível mediante solicitação.`}
-            </p>
+            {!editing ? (
+              <>
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-sm text-muted-foreground leading-relaxed flex-1">
+                    {current.intro}
+                  </p>
+                </div>
 
-            {productDescriptions[product.id]?.bullets && (
-              <div className="rounded-xl border border-border bg-surface p-3">
-                {productDescriptions[product.id]?.sectionTitle && (
-                  <p className="text-xs font-semibold uppercase tracking-wider text-foreground mb-2">
-                    {productDescriptions[product.id]?.sectionTitle}
-                  </p>
+                {current.bullets && current.bullets.length > 0 && (
+                  <div className="rounded-xl border border-border bg-surface p-3">
+                    {current.sectionTitle && (
+                      <p className="text-xs font-semibold uppercase tracking-wider text-foreground mb-2">
+                        {current.sectionTitle}
+                      </p>
+                    )}
+                    <ul className="space-y-1.5">
+                      {current.bullets.map((b, i) => (
+                        <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
+                          <Check className="h-3.5 w-3.5 text-success mt-0.5 flex-shrink-0" />
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    {current.extra && (
+                      <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                        {current.extra}
+                      </p>
+                    )}
+                  </div>
                 )}
-                <ul className="space-y-1.5">
-                  {productDescriptions[product.id]!.bullets!.map((b) => (
-                    <li key={b} className="flex items-start gap-2 text-xs text-muted-foreground">
-                      <Check className="h-3.5 w-3.5 text-success mt-0.5 flex-shrink-0" />
-                      <span>{b}</span>
-                    </li>
-                  ))}
-                </ul>
-                {productDescriptions[product.id]?.extra && (
-                  <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
-                    {productDescriptions[product.id]?.extra}
-                  </p>
-                )}
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={startEdit}
+                    className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-border bg-card text-xs font-medium text-foreground hover:bg-surface transition"
+                  >
+                    <Pencil className="h-3.5 w-3.5" /> Editar descrição
+                  </button>
+                  {hasOverride && (
+                    <button
+                      onClick={reset}
+                      className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-border bg-card text-xs font-medium text-muted-foreground hover:text-foreground transition"
+                    >
+                      <RotateCcw className="h-3.5 w-3.5" /> Restaurar padrão
+                    </button>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="flex flex-col gap-2 rounded-xl border border-primary/40 bg-surface p-3">
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Introdução</label>
+                <textarea
+                  value={draft.intro}
+                  onChange={(e) => setDraft({ ...draft, intro: e.target.value })}
+                  rows={4}
+                  className="w-full rounded-md border border-border bg-card p-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                />
+
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mt-1">Título da seção (opcional)</label>
+                <input
+                  value={draft.sectionTitle ?? ""}
+                  onChange={(e) => setDraft({ ...draft, sectionTitle: e.target.value })}
+                  className="w-full rounded-md border border-border bg-card p-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                />
+
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mt-1">Tópicos (um por linha)</label>
+                <textarea
+                  value={(draft.bullets ?? []).join("\n")}
+                  onChange={(e) => setDraft({ ...draft, bullets: e.target.value.split("\n") })}
+                  rows={5}
+                  className="w-full rounded-md border border-border bg-card p-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                />
+
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mt-1">Texto adicional (opcional)</label>
+                <textarea
+                  value={draft.extra ?? ""}
+                  onChange={(e) => setDraft({ ...draft, extra: e.target.value })}
+                  rows={3}
+                  className="w-full rounded-md border border-border bg-card p-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                />
+
+                <div className="flex items-center gap-2 mt-1">
+                  <button
+                    onClick={save}
+                    className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition"
+                  >
+                    <Save className="h-3.5 w-3.5" /> Salvar
+                  </button>
+                  <button
+                    onClick={() => setEditing(false)}
+                    className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md border border-border bg-card text-xs font-medium text-foreground hover:bg-surface transition"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+                <p className="text-[10px] text-muted-foreground mt-1">
+                  As alterações ficam salvas neste navegador.
+                </p>
               </div>
             )}
 
