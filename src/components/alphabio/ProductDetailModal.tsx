@@ -328,6 +328,18 @@ export function ProductDetailModal({
                     </div>
                   )}
 
+                  <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mt-1 inline-flex items-center gap-1">
+                    <Package className="h-3 w-3" /> Quantidade em estoque
+                  </label>
+                  <input
+                    type="number"
+                    step="1"
+                    min="0"
+                    value={stockDraft}
+                    onChange={(e) => setStockDraft(e.target.value)}
+                    className="w-full rounded-md border border-border bg-surface p-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  />
+
                   <div className="flex items-center gap-2 mt-1">
                     <button
                       onClick={() => {
@@ -345,13 +357,19 @@ export function ProductDetailModal({
                           toast.error("Informe a URL da imagem");
                           return;
                         }
+                        const stockNum = parseInt(stockDraft, 10);
+                        if (!isFinite(stockNum) || stockNum < 0) {
+                          toast.error("Informe um estoque válido");
+                          return;
+                        }
                         fieldOverrides.set(product.id, {
                           price: priceNum,
                           oldPrice: oldNum,
                           image: imageDraft.trim(),
+                          stock: stockNum,
                         });
                         setEditingFields(false);
-                        toast.success("Preço e imagem atualizados");
+                        toast.success("Produto atualizado");
                       }}
                       className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition"
                     >
