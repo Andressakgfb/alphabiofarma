@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Heart, Eye, Star, ShoppingCart } from "lucide-react";
 import { ProductDetailModal } from "./ProductDetailModal";
 import { cart } from "@/lib/cart";
+import { catalog, type CatalogFilters } from "@/lib/catalog";
 import { toast } from "sonner";
 
 export type Product = {
@@ -162,22 +163,54 @@ export function ProductCard({ p, onOpen }: { p: Product; onOpen: (p: Product) =>
 
 export function ProductGrid() {
   const [selected, setSelected] = useState<Product | null>(null);
+  const [filters, setFilters] = useState<CatalogFilters>(catalog.get());
+
+  useEffect(() => {
+    const unsub = catalog.subscribe(setFilters);
+    return () => { unsub(); };
+  }, []);
+
+  const filtered = useMemo(() => {
+    const q = filters.query.trim().toLowerCase();
+    return products.filter((p) => {
+      if (filters.brand !== "Todas" && p.brand !== filters.brand) return false;
+      if (filters.priceMax && p.price > filters.priceMax) return false;
+      if (q) {
+        const hay = `${p.name} ${p.brand}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }, [filters]);
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-8">
+    <section id="catalogo" className="mx-auto max-w-7xl px-4 py-8">
       <div className="flex items-end justify-between mb-4">
         <div>
           <h2 className="text-lg sm:text-2xl font-bold text-foreground">Catálogo completo</h2>
-          <p className="text-xs sm:text-sm text-muted-foreground">Suplementação, hormônios e peptídeos selecionados pela nossa equipe clínica</p>
+          <p className="text-xs sm:text-sm text-muted-foreground">
+            {filtered.length} {filtered.length === 1 ? "produto encontrado" : "produtos encontrados"}
+          </p>
         </div>
-        <a href="#" className="text-xs font-semibold text-success hover:underline whitespace-nowrap">Ver todos →</a>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-        {products.map((p) => (
-          <ProductCard key={p.id} p={p} onOpen={setSelected} />
-        ))}
-      </div>
+      {filtered.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center">
+          <p className="text-sm text-muted-foreground">Nenhum produto encontrado para os filtros atuais.</p>
+          <button
+            onClick={() => catalog.reset()}
+            className="mt-3 inline-flex h-9 px-4 rounded-lg bg-primary text-primary-foreground text-xs font-semibold items-center hover:bg-primary/90 transition"
+          >
+            Limpar filtros
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+          {filtered.map((p) => (
+            <ProductCard key={p.id} p={p} onOpen={setSelected} />
+          ))}
+        </div>
+      )}
 
       <ProductDetailModal product={selected} onClose={() => setSelected(null)} />
     </section>
