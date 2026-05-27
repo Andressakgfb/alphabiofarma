@@ -20,23 +20,46 @@ const DEFAULTS: SocialLinks = {
   whatsapp: "",
 };
 
+export const DEFAULT_CATEGORIES = [
+  "Suplementação e Performance",
+  "Hormônio Crescimento Regenerativo",
+  "Retatrutida",
+  "Tirzepatida / Mounjaro",
+];
+
+export const DEFAULT_BRANDS = ["AlphaBio Lab", "AlphaBio Clinic", "Lipoland", "T.G Pharma"];
+
+function readRaw(): any {
+  if (typeof window === "undefined") return {};
+  try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch { return {}; }
+}
+function writeRaw(patch: any) {
+  if (typeof window === "undefined") return;
+  const raw = readRaw();
+  localStorage.setItem(KEY, JSON.stringify({ ...raw, ...patch }));
+  window.dispatchEvent(new Event(EVENT));
+}
+
 export const siteSettings = {
   getSocial(): SocialLinks {
-    if (typeof window === "undefined") return DEFAULTS;
-    try {
-      const raw = JSON.parse(localStorage.getItem(KEY) || "{}");
-      return { ...DEFAULTS, ...(raw.social ?? {}) };
-    } catch {
-      return DEFAULTS;
-    }
+    return { ...DEFAULTS, ...(readRaw().social ?? {}) };
   },
   setSocial(social: SocialLinks) {
-    if (typeof window === "undefined") return;
-    const raw = (() => {
-      try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch { return {}; }
-    })();
-    localStorage.setItem(KEY, JSON.stringify({ ...raw, social }));
-    window.dispatchEvent(new Event(EVENT));
+    writeRaw({ social });
+  },
+  getCategories(): string[] {
+    const v = readRaw().categories;
+    return Array.isArray(v) && v.length ? v : DEFAULT_CATEGORIES;
+  },
+  setCategories(categories: string[]) {
+    writeRaw({ categories });
+  },
+  getBrands(): string[] {
+    const v = readRaw().brands;
+    return Array.isArray(v) && v.length ? v : DEFAULT_BRANDS;
+  },
+  setBrands(brands: string[]) {
+    writeRaw({ brands });
   },
   subscribe(cb: () => void) {
     if (typeof window === "undefined") return () => {};
