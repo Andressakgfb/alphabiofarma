@@ -114,11 +114,7 @@ export function CartModal({ open, onClose }: { open: boolean; onClose: () => voi
                 </span>
               </div>
               <button
-                onClick={() => {
-                  toast.success("Pedido enviado para o checkout");
-                  cart.clear();
-                  onClose();
-                }}
+                onClick={handleCheckout}
                 className="w-full h-11 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90"
               >
                 Finalizar compra
@@ -135,5 +131,16 @@ export function CartModal({ open, onClose }: { open: boolean; onClose: () => voi
       </div>
     </div>
     </Portal>
+    <CheckoutModal
+      open={checkoutOpen}
+      items={items}
+      onClose={() => setCheckoutOpen(false)}
+      onRequireLogin={() => {
+        setCheckoutOpen(false);
+        setAuthOpen(true);
+      }}
+    />
+    <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
+    </>
   );
 }
