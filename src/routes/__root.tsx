@@ -73,6 +73,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "google-site-verification", content: "tTAmutsUZEPIQPVzEWUSyzUXzWFww_qsv9XhNTjTw68" },
       { title: "Alphabio Farma" },
       { name: "description", content: "Loja especializada em peptídeos e produtos de alta qualidade voltados para pesquisa, performance e bem-estar." },
       { name: "author", content: "Lovable" },
