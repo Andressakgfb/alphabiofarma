@@ -4,7 +4,7 @@ import { ProductDetailModal } from "./ProductDetailModal";
 import { cart } from "@/lib/cart";
 import { toast } from "sonner";
 
-type Product = {
+export type Product = {
   id: string;
   name: string;
   brand: string;
@@ -50,7 +50,7 @@ const raw: Array<Omit<Product, "installment" | "rating" | "reviews"> & { rating?
   { id: "reta15amp", name: "Retatrutida Ampola 15mg", brand: "AlphaBio Clinic", image: `${BASE}/4cf0bc34b_IMG_7853.jpg`, price: 800, oldPrice: 1300, stock: 6, tag: "-38%" },
 ];
 
-const products: Product[] = raw.map((p) => {
+export const products: Product[] = raw.map((p) => {
   const count = p.price >= 1500 ? 10 : 6;
   return {
     ...p,
@@ -73,7 +73,7 @@ function Stars({ n }: { n: number }) {
   );
 }
 
-function ProductCard({ p, onOpen }: { p: Product; onOpen: (p: Product) => void }) {
+export function ProductCard({ p, onOpen }: { p: Product; onOpen: (p: Product) => void }) {
   const outOfStock = p.stock === 0;
   return (
     <article

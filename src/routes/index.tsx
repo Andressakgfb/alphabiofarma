@@ -2,9 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/alphabio/Header";
 import { Hero } from "@/components/alphabio/Hero";
 import { SmartSearch } from "@/components/alphabio/SmartSearch";
+import { BestSellers } from "@/components/alphabio/BestSellers";
 import { Filters } from "@/components/alphabio/Filters";
 import { ProductGrid } from "@/components/alphabio/ProductGrid";
 import { Footer } from "@/components/alphabio/Footer";
+import { WhatsAppFab } from "@/components/alphabio/WhatsAppFab";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -49,10 +51,12 @@ function Index() {
       <main>
         <Hero />
         <SmartSearch />
+        <BestSellers />
         <Filters />
         <ProductGrid />
       </main>
       <Footer />
+      <WhatsAppFab />
     </div>
   );
 }
