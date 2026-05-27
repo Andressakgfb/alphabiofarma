@@ -1,0 +1,9 @@
+# AlphaBio Farma
+
+> Farmácia online especializada em suplementação clínica, hormônios bioidênticos, peptídeos e biohacking.
+
+A AlphaBio Farma oferece produtos selecionados para performance, longevidade e bem-estar, incluindo hormônio do crescimento regenerativo, tirzepatida, peptídeos e suplementação avançada.
+
+## Pages
+
+- [Home](/): Catálogo de suplementação clínica, hormônios bioidênticos e peptídeos.

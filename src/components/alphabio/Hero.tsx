@@ -12,12 +12,17 @@ export function Hero() {
   return (
     <section className="relative">
       <div className="mx-auto max-w-7xl px-4 pt-4 pb-6">
+        <h1 className="sr-only">
+          AlphaBio Farma — Suplementação clínica e hormônios regenerativos
+        </h1>
         <div className="overflow-hidden rounded-2xl border border-border shadow-[var(--shadow-soft)]">
           <img
             src={bannerImg}
             alt="Bem-vindo à AlphaBio — Loja oficial, compra segura"
             width={1306}
             height={978}
+            fetchPriority="high"
+            decoding="async"
             className="w-full h-auto block"
           />
         </div>

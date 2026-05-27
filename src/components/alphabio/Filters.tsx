@@ -14,9 +14,9 @@ export function Filters() {
     <section className="mx-auto max-w-7xl px-4 pb-2">
       <div className="rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-soft)]">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="inline-flex items-center gap-2 text-sm font-bold text-foreground">
+          <h2 className="inline-flex items-center gap-2 text-sm font-bold text-foreground">
             <SlidersHorizontal className="h-4 w-4 text-success" /> Filtrar resultados
-          </h3>
+          </h2>
           <button className="text-[11px] font-semibold text-muted-foreground hover:text-foreground">Limpar</button>
         </div>
 
