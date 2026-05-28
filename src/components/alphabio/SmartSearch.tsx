@@ -135,12 +135,20 @@ export function SmartSearch() {
                   ))}
                 </ul>
                 {isAdmin && (
-                  <button
-                    onClick={() => { setEditing("category"); setOpen(null); }}
-                    className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-primary hover:underline"
-                  >
-                    <Pencil className="h-3 w-3" /> Editar categorias
-                  </button>
+                  <div className="mt-3 flex flex-col gap-2 border-t border-border pt-3">
+                    <button
+                      onClick={() => { setAddingProduct(true); setOpen(null); }}
+                      className="inline-flex items-center justify-center gap-1.5 h-9 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition"
+                    >
+                      <Plus className="h-3.5 w-3.5" /> Adicionar produto
+                    </button>
+                    <button
+                      onClick={() => { setEditing("category"); setOpen(null); }}
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary hover:underline"
+                    >
+                      <Pencil className="h-3 w-3" /> Editar categorias
+                    </button>
+                  </div>
                 )}
               </>
             )}
