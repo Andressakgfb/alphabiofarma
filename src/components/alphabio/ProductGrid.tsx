@@ -51,15 +51,35 @@ function applyOverride(p: Product): Product {
 // Snapshot estático (sem overrides). Mantido apenas para compatibilidade.
 export const products: Product[] = baseProducts;
 
-let cachedSnapshot: Product[] = baseProducts.map(applyOverride);
+function buildCustom(): Product[] {
+  return customProducts.list().map((p) => {
+    const count = p.price >= 1500 ? 10 : 6;
+    return {
+      id: p.id,
+      name: p.name,
+      brand: p.brand,
+      image: p.image,
+      price: p.price,
+      oldPrice: p.oldPrice,
+      stock: p.stock,
+      tag: p.tag,
+      category: p.category,
+      isCustom: true,
+      rating: 5,
+      reviews: 0,
+      installment: { count, value: +(p.price / count).toFixed(2) },
+    };
+  });
+}
+
+let cachedSnapshot: Product[] = [...buildCustom(), ...baseProducts.map(applyOverride)];
 function recomputeSnapshot() {
-  cachedSnapshot = baseProducts.map(applyOverride);
+  cachedSnapshot = [...buildCustom(), ...baseProducts.map(applyOverride)];
 }
 function subscribeOverrides(cb: () => void) {
-  return fieldOverrides.subscribe(() => {
-    recomputeSnapshot();
-    cb();
-  });
+  const unsubA = fieldOverrides.subscribe(() => { recomputeSnapshot(); cb(); });
+  const unsubB = customProducts.subscribe(() => { recomputeSnapshot(); cb(); });
+  return () => { unsubA(); unsubB(); };
 }
 function getSnapshot() {
   return cachedSnapshot;
