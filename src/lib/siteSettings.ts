@@ -29,6 +29,13 @@ export const DEFAULT_CATEGORIES = [
 
 export const DEFAULT_BRANDS = ["AlphaBio Lab", "AlphaBio Clinic", "Lipoland", "T.G Pharma"];
 
+export const DEFAULT_PRODUCT_TYPES = [
+  "Peptídeo de Performance",
+  "Bem-estar e Saúde Integrativa",
+  "Hormônio Crescimento Regenerativos",
+  "Emagrecimento/ Metabólicos",
+];
+
 function readRaw(): any {
   if (typeof window === "undefined") return {};
   try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch { return {}; }
@@ -60,6 +67,13 @@ export const siteSettings = {
   },
   setBrands(brands: string[]) {
     writeRaw({ brands });
+  },
+  getProductTypes(): string[] {
+    const v = readRaw().productTypes;
+    return Array.isArray(v) && v.length ? v : DEFAULT_PRODUCT_TYPES;
+  },
+  setProductTypes(productTypes: string[]) {
+    writeRaw({ productTypes });
   },
   subscribe(cb: () => void) {
     if (typeof window === "undefined") return () => {};

@@ -1,8 +1,9 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { X, Upload } from "lucide-react";
+import { X, Upload, SlidersHorizontal } from "lucide-react";
 import { customProducts } from "@/lib/customProducts";
 import { siteSettings } from "@/lib/siteSettings";
 import { BRANDS } from "@/lib/catalog";
+import { TaxonomyEditModal } from "./TaxonomyEditModal";
 import { toast } from "sonner";
 
 type Props = {
@@ -19,19 +20,29 @@ export function AddProductModal({ open, onClose, initialCategory }: Props) {
   );
   const categories = JSON.parse(catsRaw) as string[];
 
+  const typesRaw = useSyncExternalStore(
+    siteSettings.subscribe,
+    () => JSON.stringify(siteSettings.getProductTypes()),
+    () => "[]"
+  );
+  const productTypes = JSON.parse(typesRaw) as string[];
+
   const [name, setName] = useState("");
   const [brand, setBrand] = useState(BRANDS[1] ?? "");
   const [category, setCategory] = useState(initialCategory && initialCategory !== "Todas" ? initialCategory : (categories[0] ?? ""));
+  const [productType, setProductType] = useState(productTypes[0] ?? "");
   const [price, setPrice] = useState("");
   const [oldPrice, setOldPrice] = useState("");
   const [stock, setStock] = useState("10");
   const [image, setImage] = useState("");
   const [tag, setTag] = useState("");
+  const [editingTypes, setEditingTypes] = useState(false);
 
   useEffect(() => {
     if (open) {
       setName(""); setPrice(""); setOldPrice(""); setStock("10"); setImage(""); setTag("");
       setCategory(initialCategory && initialCategory !== "Todas" ? initialCategory : (categories[0] ?? ""));
+      setProductType(productTypes[0] ?? "");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
@@ -55,6 +66,7 @@ export function AddProductModal({ open, onClose, initialCategory }: Props) {
       name: name.trim(),
       brand: brand.trim() || "AlphaBio Lab",
       category: category || undefined,
+      productType: productType || undefined,
       price: priceNum,
       oldPrice: oldPriceNum,
       stock: stockNum,
@@ -111,6 +123,23 @@ export function AddProductModal({ open, onClose, initialCategory }: Props) {
             </Field>
           </div>
 
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <span className="block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Tipo de produto</span>
+              <button
+                type="button"
+                onClick={() => setEditingTypes(true)}
+                className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary hover:underline"
+              >
+                <SlidersHorizontal className="h-3 w-3" /> Gerenciar tipos
+              </button>
+            </div>
+            <select value={productType} onChange={(e) => setProductType(e.target.value)} className={inp}>
+              {productTypes.length === 0 && <option value="">— sem tipos —</option>}
+              {productTypes.map((t) => <option key={t} value={t}>{t}</option>)}
+            </select>
+          </div>
+
           <Field label="Imagem">
             <div className="flex items-center gap-2">
               <label className="inline-flex items-center gap-1.5 h-10 px-3 rounded-lg border border-border bg-surface text-xs font-semibold cursor-pointer hover:border-primary">
@@ -128,6 +157,7 @@ export function AddProductModal({ open, onClose, initialCategory }: Props) {
           <button onClick={submit} className="flex-1 h-10 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90">Adicionar</button>
         </div>
       </div>
+      <TaxonomyEditModal open={editingTypes} kind="productType" onClose={() => setEditingTypes(false)} />
     </div>
   );
 }
