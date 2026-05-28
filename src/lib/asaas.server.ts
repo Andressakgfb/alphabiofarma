@@ -32,7 +32,7 @@ async function asaasFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
   }
   if (!res.ok) {
     console.error(
-      `Asaas API ${res.status} on ${path}:
+      `Asaas API ${res.status} on ${path}:`,
       typeof body === "string" ? body : JSON.stringify(body),
     );
     throw new Error("Erro ao processar pagamento. Tente novamente.");
