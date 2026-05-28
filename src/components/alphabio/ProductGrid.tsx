@@ -155,6 +155,21 @@ export function ProductCard({ p, onOpen }: { p: Product; onOpen: (p: Product) =>
           >
             <Eye className="h-4 w-4" />
           </button>
+          {isAdmin && p.isCustom && (
+            <button
+              aria-label="Remover produto"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (confirm(`Remover "${p.name}"?`)) {
+                  customProducts.remove(p.id);
+                  toast.success("Produto removido");
+                }
+              }}
+              className="h-8 w-8 rounded-full bg-card/95 backdrop-blur flex items-center justify-center text-destructive hover:bg-destructive hover:text-destructive-foreground transition shadow-sm"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          )}
         </div>
       </div>
 
