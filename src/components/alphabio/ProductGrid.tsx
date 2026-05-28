@@ -22,6 +22,7 @@ export type Product = {
   tag?: string;
   stock: number;
   category?: string;
+  productType?: string;
   isCustom?: boolean;
 };
 
