@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
-import { Heart, Eye, Star, ShoppingCart } from "lucide-react";
+import { Heart, Eye, Star, ShoppingCart, Trash2 } from "lucide-react";
 import { ProductDetailModal } from "./ProductDetailModal";
 import { cart } from "@/lib/cart";
 import { catalog, type CatalogFilters } from "@/lib/catalog";
 import { PRODUCTS_DATA } from "@/lib/products-data";
 import { fieldOverrides } from "@/lib/productDescriptionOverrides";
+import { customProducts } from "@/lib/customProducts";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { toast } from "sonner";
 
 export type Product = {
