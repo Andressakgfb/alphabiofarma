@@ -33,6 +33,7 @@ export function SmartSearch() {
   const { categories, brands } = useTaxonomy();
   const { isAdmin } = useIsAdmin();
   const [editing, setEditing] = useState<null | "category" | "brand">(null);
+  const [addingProduct, setAddingProduct] = useState(false);
 
   // Live search: push to store on every change
   useEffect(() => {
