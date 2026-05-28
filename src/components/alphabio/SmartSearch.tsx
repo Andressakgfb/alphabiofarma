@@ -206,6 +206,11 @@ export function SmartSearch() {
         kind={editing ?? "category"}
         onClose={() => setEditing(null)}
       />
+      <AddProductModal
+        open={addingProduct}
+        onClose={() => setAddingProduct(false)}
+        initialCategory={category}
+      />
     </section>
   );
 }
