@@ -3,7 +3,7 @@ import type { ProductData } from "./products-data";
 
 const KEY = "alphabio:customProducts:v1";
 
-export type CustomProduct = ProductData & { category?: string };
+export type CustomProduct = ProductData & { category?: string; productType?: string };
 
 function readAll(): CustomProduct[] {
   if (typeof window === "undefined") return [];
