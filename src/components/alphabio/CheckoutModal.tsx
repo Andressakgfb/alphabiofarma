@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Portal } from "./Portal";
-import { X, Loader2, ShieldCheck } from "lucide-react";
+import { X, Loader2, ShieldCheck, Landmark, CreditCard, Smartphone, Wallet } from "lucide-react";
 import { cart, cartTotal, type CartItem } from "@/lib/cart";
 import { supabase } from "@/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
@@ -30,6 +30,15 @@ function maskPhone(v: string) {
   return d.replace(/(\d{2})(\d)/, "($1) $2").replace(/(\d{5})(\d)/, "$1-$2");
 }
 
+type BillingType = "UNDEFINED" | "PIX" | "CREDIT_CARD" | "BOLETO";
+
+const BILLING_OPTIONS: { value: BillingType; label: string; icon: React.ReactNode; desc: string }[] = [
+  { value: "UNDEFINED", label: "Escolher na hora", icon: <Wallet className="h-4 w-4" />, desc: "Você escolhe na página do Asaas" },
+  { value: "PIX", label: "Pix", icon: <Smartphone className="h-4 w-4" />, desc: "Pagamento instantâneo" },
+  { value: "CREDIT_CARD", label: "Cartão", icon: <CreditCard className="h-4 w-4" />, desc: "Parcele em até 12x" },
+  { value: "BOLETO", label: "Boleto", icon: <Landmark className="h-4 w-4" />, desc: "Compensação em 1-2 dias" },
+];
+
 export function CheckoutModal({
   open,
   items,
@@ -45,6 +54,7 @@ export function CheckoutModal({
   const [email, setEmail] = useState("");
   const [cpfCnpj, setCpfCnpj] = useState("");
   const [phone, setPhone] = useState("");
+  const [billingType, setBillingType] = useState<BillingType>("UNDEFINED");
   const [submitting, setSubmitting] = useState(false);
   const createCheckout = useServerFn(createAsaasCheckout);
 
@@ -83,6 +93,7 @@ export function CheckoutModal({
             cpfCnpj: cpfCnpj.replace(/\D/g, ""),
             phone: phone.replace(/\D/g, "") || undefined,
           },
+          billingType,
         },
       });
       cart.clear();
@@ -174,6 +185,32 @@ export function CheckoutModal({
               />
             </div>
 
+            <div>
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                Forma de pagamento
+              </label>
+              <div className="mt-1 grid grid-cols-2 gap-2">
+                {BILLING_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setBillingType(opt.value)}
+                    className={`flex flex-col items-center gap-1 rounded-lg border p-3 text-xs transition
+                      ${billingType === opt.value
+                        ? "border-primary bg-primary/10 text-primary font-semibold"
+                        : "border-border bg-surface text-foreground hover:border-primary/40"
+                      }`}
+                  >
+                    {opt.icon}
+                    <span>{opt.label}</span>
+                    <span className="text-[10px] text-muted-foreground font-normal leading-tight">
+                      {opt.desc}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="rounded-lg bg-surface/60 p-3 text-sm flex items-center justify-between">
               <span className="text-muted-foreground">Total do pedido</span>
               <span className="text-xl font-bold text-success">
@@ -182,8 +219,13 @@ export function CheckoutModal({
             </div>
 
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Você será redirecionado para a página segura do Asaas para escolher entre{" "}
-              <strong>Pix</strong> ou <strong>Cartão de crédito</strong>.
+              {billingType === "UNDEFINED"
+                ? "Você será redirecionado para a página segura do Asaas para escolher entre Pix, Cartão de crédito ou Boleto."
+                : billingType === "BOLETO"
+                ? "Você será redirecionado para a página segura do Asaas para gerar o boleto."
+                : billingType === "CREDIT_CARD"
+                ? "Você será redirecionado para a página segura do Asaas para pagar com cartão."
+                : "Você será redirecionado para a página segura do Asaas para pagar com Pix."}
             </p>
 
             <button
