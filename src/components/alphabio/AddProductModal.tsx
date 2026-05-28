@@ -123,6 +123,23 @@ export function AddProductModal({ open, onClose, initialCategory }: Props) {
             </Field>
           </div>
 
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <span className="block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Tipo de produto</span>
+              <button
+                type="button"
+                onClick={() => setEditingTypes(true)}
+                className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary hover:underline"
+              >
+                <SlidersHorizontal className="h-3 w-3" /> Gerenciar tipos
+              </button>
+            </div>
+            <select value={productType} onChange={(e) => setProductType(e.target.value)} className={inp}>
+              {productTypes.length === 0 && <option value="">— sem tipos —</option>}
+              {productTypes.map((t) => <option key={t} value={t}>{t}</option>)}
+            </select>
+          </div>
+
           <Field label="Imagem">
             <div className="flex items-center gap-2">
               <label className="inline-flex items-center gap-1.5 h-10 px-3 rounded-lg border border-border bg-surface text-xs font-semibold cursor-pointer hover:border-primary">
