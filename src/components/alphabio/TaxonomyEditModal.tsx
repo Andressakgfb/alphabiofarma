@@ -9,7 +9,7 @@ export function TaxonomyEditModal({
   onClose,
 }: {
   open: boolean;
-  kind: "category" | "brand";
+  kind: "category" | "brand" | "productType";
   onClose: () => void;
 }) {
   const [items, setItems] = useState<string[]>([]);
@@ -17,14 +17,22 @@ export function TaxonomyEditModal({
 
   useEffect(() => {
     if (!open) return;
-    setItems(kind === "category" ? siteSettings.getCategories() : siteSettings.getBrands());
+    setItems(
+      kind === "category"
+        ? siteSettings.getCategories()
+        : kind === "brand"
+        ? siteSettings.getBrands()
+        : siteSettings.getProductTypes()
+    );
     setDraft("");
   }, [open, kind]);
 
   if (!open) return null;
 
-  const title = kind === "category" ? "Editar categorias" : "Editar marcas";
-  const placeholder = kind === "category" ? "Nova categoria" : "Nova marca";
+  const title =
+    kind === "category" ? "Editar categorias" : kind === "brand" ? "Editar marcas" : "Editar tipos de produto";
+  const placeholder =
+    kind === "category" ? "Nova categoria" : kind === "brand" ? "Nova marca" : "Novo tipo de produto";
 
   const add = () => {
     const v = draft.trim();
@@ -45,7 +53,8 @@ export function TaxonomyEditModal({
   const save = () => {
     const cleaned = items.map((s) => s.trim()).filter(Boolean);
     if (kind === "category") siteSettings.setCategories(cleaned);
-    else siteSettings.setBrands(cleaned);
+    else if (kind === "brand") siteSettings.setBrands(cleaned);
+    else siteSettings.setProductTypes(cleaned);
     toast.success("Salvo");
     onClose();
   };
