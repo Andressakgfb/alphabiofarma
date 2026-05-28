@@ -3,6 +3,7 @@ export type CatalogFilters = {
   query: string;
   category: string; // "Todas" | category label
   brand: string;    // "Todas" | brand name
+  productType: string; // "Todos" | product type label
   priceMax: number; // upper bound
 };
 
@@ -10,6 +11,7 @@ const DEFAULT: CatalogFilters = {
   query: "",
   category: "Todas",
   brand: "Todas",
+  productType: "Todos",
   priceMax: 5000,
 };
 
