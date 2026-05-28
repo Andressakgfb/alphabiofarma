@@ -20,19 +20,29 @@ export function AddProductModal({ open, onClose, initialCategory }: Props) {
   );
   const categories = JSON.parse(catsRaw) as string[];
 
+  const typesRaw = useSyncExternalStore(
+    siteSettings.subscribe,
+    () => JSON.stringify(siteSettings.getProductTypes()),
+    () => "[]"
+  );
+  const productTypes = JSON.parse(typesRaw) as string[];
+
   const [name, setName] = useState("");
   const [brand, setBrand] = useState(BRANDS[1] ?? "");
   const [category, setCategory] = useState(initialCategory && initialCategory !== "Todas" ? initialCategory : (categories[0] ?? ""));
+  const [productType, setProductType] = useState(productTypes[0] ?? "");
   const [price, setPrice] = useState("");
   const [oldPrice, setOldPrice] = useState("");
   const [stock, setStock] = useState("10");
   const [image, setImage] = useState("");
   const [tag, setTag] = useState("");
+  const [editingTypes, setEditingTypes] = useState(false);
 
   useEffect(() => {
     if (open) {
       setName(""); setPrice(""); setOldPrice(""); setStock("10"); setImage(""); setTag("");
       setCategory(initialCategory && initialCategory !== "Todas" ? initialCategory : (categories[0] ?? ""));
+      setProductType(productTypes[0] ?? "");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
