@@ -1,4 +1,4 @@
-import { ShieldCheck, Truck, CreditCard, Flame } from "lucide-react";
+import { ShieldCheck, Truck, CreditCard, BadgePercent } from "lucide-react";
 import bannerHero from "@/assets/banner-hero.png";
 
 const benefits = [
