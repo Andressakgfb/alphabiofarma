@@ -5,7 +5,7 @@ const benefits = [
   { icon: ShieldCheck, label: "Compra 100% segura", sub: "Pagamento criptografado" },
   { icon: Truck, label: "Frete rápido", sub: "Entrega segura" },
   { icon: CreditCard, label: "Parcele em 10x", sub: "Sem juros" },
-  { icon: Flame, label: "Melhores preços", sub: "Aproveite os descontos" },
+  { icon: BadgePercent, label: "Melhores preços", sub: "Aproveite os descontos" },
 ];
 
 export function Hero() {
