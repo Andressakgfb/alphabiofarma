@@ -21,6 +21,8 @@ export type Product = {
   installment: { count: number; value: number };
   tag?: string;
   stock: number;
+  category?: string;
+  isCustom?: boolean;
 };
 
 const baseProducts: Product[] = PRODUCTS_DATA.map((p) => {
