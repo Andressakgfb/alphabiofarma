@@ -1,11 +1,11 @@
-import { ShieldCheck, Truck, CreditCard, Flame } from "lucide-react";
+import { ShieldCheck, Truck, CreditCard, BadgePercent } from "lucide-react";
 import bannerHero from "@/assets/banner-hero.png";
 
 const benefits = [
   { icon: ShieldCheck, label: "Compra 100% segura", sub: "Pagamento criptografado" },
   { icon: Truck, label: "Frete rápido", sub: "Entrega segura" },
   { icon: CreditCard, label: "Parcele em 10x", sub: "Sem juros" },
-  { icon: Flame, label: "Melhores preços", sub: "Aproveite os descontos" },
+  { icon: BadgePercent, label: "Melhores preços", sub: "Aproveite os descontos" },
 ];
 
 export function Hero() {
@@ -29,7 +29,7 @@ export function Hero() {
               key={b.label}
               className="flex items-center gap-3 rounded-xl border border-border bg-card px-3 py-3 shadow-[var(--shadow-soft)]"
             >
-              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 <b.icon className="h-5 w-5" strokeWidth={1.75} />
               </span>
               <div className="min-w-0">
