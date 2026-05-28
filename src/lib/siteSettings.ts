@@ -68,6 +68,13 @@ export const siteSettings = {
   setBrands(brands: string[]) {
     writeRaw({ brands });
   },
+  getProductTypes(): string[] {
+    const v = readRaw().productTypes;
+    return Array.isArray(v) && v.length ? v : DEFAULT_PRODUCT_TYPES;
+  },
+  setProductTypes(productTypes: string[]) {
+    writeRaw({ productTypes });
+  },
   subscribe(cb: () => void) {
     if (typeof window === "undefined") return () => {};
     const h = () => cb();
