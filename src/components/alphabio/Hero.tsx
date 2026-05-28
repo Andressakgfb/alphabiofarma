@@ -29,7 +29,7 @@ export function Hero() {
               key={b.label}
               className="flex items-center gap-3 rounded-xl border border-border bg-card px-3 py-3 shadow-[var(--shadow-soft)]"
             >
-              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                 <b.icon className="h-5 w-5" strokeWidth={1.75} />
               </span>
               <div className="min-w-0">
