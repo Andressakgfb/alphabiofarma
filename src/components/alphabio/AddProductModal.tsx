@@ -66,6 +66,7 @@ export function AddProductModal({ open, onClose, initialCategory }: Props) {
       name: name.trim(),
       brand: brand.trim() || "AlphaBio Lab",
       category: category || undefined,
+      productType: productType || undefined,
       price: priceNum,
       oldPrice: oldPriceNum,
       stock: stockNum,
