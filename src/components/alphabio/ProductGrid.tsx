@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
-import { Heart, Eye, Star, ShoppingCart } from "lucide-react";
+import { Heart, Eye, Star, ShoppingCart, Trash2 } from "lucide-react";
 import { ProductDetailModal } from "./ProductDetailModal";
 import { cart } from "@/lib/cart";
 import { catalog, type CatalogFilters } from "@/lib/catalog";
 import { PRODUCTS_DATA } from "@/lib/products-data";
 import { fieldOverrides } from "@/lib/productDescriptionOverrides";
+import { customProducts } from "@/lib/customProducts";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { toast } from "sonner";
 
 export type Product = {
@@ -19,6 +21,8 @@ export type Product = {
   installment: { count: number; value: number };
   tag?: string;
   stock: number;
+  category?: string;
+  isCustom?: boolean;
 };
 
 const baseProducts: Product[] = PRODUCTS_DATA.map((p) => {
@@ -47,15 +51,35 @@ function applyOverride(p: Product): Product {
 // Snapshot estático (sem overrides). Mantido apenas para compatibilidade.
 export const products: Product[] = baseProducts;
 
-let cachedSnapshot: Product[] = baseProducts.map(applyOverride);
+function buildCustom(): Product[] {
+  return customProducts.list().map((p) => {
+    const count = p.price >= 1500 ? 10 : 6;
+    return {
+      id: p.id,
+      name: p.name,
+      brand: p.brand,
+      image: p.image,
+      price: p.price,
+      oldPrice: p.oldPrice,
+      stock: p.stock,
+      tag: p.tag,
+      category: p.category,
+      isCustom: true,
+      rating: 5,
+      reviews: 0,
+      installment: { count, value: +(p.price / count).toFixed(2) },
+    };
+  });
+}
+
+let cachedSnapshot: Product[] = [...buildCustom(), ...baseProducts.map(applyOverride)];
 function recomputeSnapshot() {
-  cachedSnapshot = baseProducts.map(applyOverride);
+  cachedSnapshot = [...buildCustom(), ...baseProducts.map(applyOverride)];
 }
 function subscribeOverrides(cb: () => void) {
-  return fieldOverrides.subscribe(() => {
-    recomputeSnapshot();
-    cb();
-  });
+  const unsubA = fieldOverrides.subscribe(() => { recomputeSnapshot(); cb(); });
+  const unsubB = customProducts.subscribe(() => { recomputeSnapshot(); cb(); });
+  return () => { unsubA(); unsubB(); };
 }
 function getSnapshot() {
   return cachedSnapshot;
@@ -89,6 +113,7 @@ function Stars({ n }: { n: number }) {
 
 export function ProductCard({ p, onOpen }: { p: Product; onOpen: (p: Product) => void }) {
   const outOfStock = p.stock === 0;
+  const { isAdmin } = useIsAdmin();
   return (
     <article
       data-product-name={p.name}
@@ -130,6 +155,21 @@ export function ProductCard({ p, onOpen }: { p: Product; onOpen: (p: Product) =>
           >
             <Eye className="h-4 w-4" />
           </button>
+          {isAdmin && p.isCustom && (
+            <button
+              aria-label="Remover produto"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (confirm(`Remover "${p.name}"?`)) {
+                  customProducts.remove(p.id);
+                  toast.success("Produto removido");
+                }
+              }}
+              className="h-8 w-8 rounded-full bg-card/95 backdrop-blur flex items-center justify-center text-destructive hover:bg-destructive hover:text-destructive-foreground transition shadow-sm"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          )}
         </div>
       </div>
 
@@ -190,6 +230,7 @@ export function ProductGrid() {
     const q = filters.query.trim().toLowerCase();
     return livePricedProducts.filter((p) => {
       if (filters.brand !== "Todas" && p.brand !== filters.brand) return false;
+      if (filters.category !== "Todas" && p.category !== filters.category) return false;
       if (filters.priceMax && p.price > filters.priceMax) return false;
       if (q) {
         const hay = `${p.name} ${p.brand}`.toLowerCase();

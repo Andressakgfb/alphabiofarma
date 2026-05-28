@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { Search, Tag, Building2, DollarSign, X, Pencil } from "lucide-react";
+import { Search, Tag, Building2, DollarSign, X, Pencil, Plus } from "lucide-react";
 import { catalog } from "@/lib/catalog";
 import { siteSettings } from "@/lib/siteSettings";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { TaxonomyEditModal } from "./TaxonomyEditModal";
+import { AddProductModal } from "./AddProductModal";
 
 function useTaxonomy() {
   const cats = useSyncExternalStore(
@@ -32,6 +33,7 @@ export function SmartSearch() {
   const { categories, brands } = useTaxonomy();
   const { isAdmin } = useIsAdmin();
   const [editing, setEditing] = useState<null | "category" | "brand">(null);
+  const [addingProduct, setAddingProduct] = useState(false);
 
   // Live search: push to store on every change
   useEffect(() => {
@@ -133,12 +135,20 @@ export function SmartSearch() {
                   ))}
                 </ul>
                 {isAdmin && (
-                  <button
-                    onClick={() => { setEditing("category"); setOpen(null); }}
-                    className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-primary hover:underline"
-                  >
-                    <Pencil className="h-3 w-3" /> Editar categorias
-                  </button>
+                  <div className="mt-3 flex flex-col gap-2 border-t border-border pt-3">
+                    <button
+                      onClick={() => { setAddingProduct(true); setOpen(null); }}
+                      className="inline-flex items-center justify-center gap-1.5 h-9 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition"
+                    >
+                      <Plus className="h-3.5 w-3.5" /> Adicionar produto
+                    </button>
+                    <button
+                      onClick={() => { setEditing("category"); setOpen(null); }}
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary hover:underline"
+                    >
+                      <Pencil className="h-3 w-3" /> Editar categorias
+                    </button>
+                  </div>
                 )}
               </>
             )}
@@ -195,6 +205,11 @@ export function SmartSearch() {
         open={editing !== null}
         kind={editing ?? "category"}
         onClose={() => setEditing(null)}
+      />
+      <AddProductModal
+        open={addingProduct}
+        onClose={() => setAddingProduct(false)}
+        initialCategory={category}
       />
     </section>
   );
