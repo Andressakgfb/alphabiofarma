@@ -65,6 +65,7 @@ function buildCustom(): Product[] {
       stock: p.stock,
       tag: p.tag,
       category: p.category,
+      productType: p.productType,
       isCustom: true,
       rating: 5,
       reviews: 0,
