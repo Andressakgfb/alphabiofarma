@@ -20,9 +20,16 @@ function statusFromEvent(event: string): string | null {
     case "PAYMENT_AWAITING_RISK_ANALYSIS":
     case "PAYMENT_APPROVED_BY_RISK_ANALYSIS":
       return "pending";
+    case "PAYMENT_PENDING":
+    case "PAYMENT_BANK_SLIP_VIEWED":
+      return "pending";
     default:
       return null;
   }
+}
+
+function logWebhook(event: string, paymentId: string, status: string | null) {
+  console.log(`[Asaas Webhook] event=${event} paymentId=${paymentId} mappedStatus=${status ?? "ignored"}`);
 }
 
 export const Route = createFileRoute("/api/public/asaas-webhook")({
@@ -49,11 +56,14 @@ export const Route = createFileRoute("/api/public/asaas-webhook")({
 
         const event: string | undefined = payload?.event;
         const payment = payload?.payment;
+
         if (!event || !payment?.id) {
           return new Response("ok", { status: 200 });
         }
 
         const newStatus = statusFromEvent(event);
+        logWebhook(event, payment.id, newStatus);
+
         if (!newStatus) {
           return new Response("ok", { status: 200 });
         }
@@ -62,17 +72,37 @@ export const Route = createFileRoute("/api/public/asaas-webhook")({
           ? String(payment.billingType).toLowerCase()
           : undefined;
 
+        const asaasPaymentId = String(payment.id);
+
         const update: { status: string; payment_method?: string } = { status: newStatus };
         if (paymentMethod) update.payment_method = paymentMethod;
 
-        const { error } = await supabaseAdmin
+        // First try by asaas_payment_id (most reliable after payment is created)
+        let result = await supabaseAdmin
           .from("orders")
           .update(update)
-          .eq("asaas_payment_id", payment.id);
+          .eq("asaas_payment_id", asaasPaymentId)
+          .select("id");
 
-        if (error) {
-          console.error("Failed to update order from webhook:", error);
+        // Fallback: if no rows updated, try by externalReference
+        if ((!result.data || result.data.length === 0) && payment.externalReference) {
+          result = await supabaseAdmin
+            .from("orders")
+            .update({
+              ...update,
+              asaas_payment_id: asaasPaymentId,
+            })
+            .eq("id", payment.externalReference)
+            .select("id");
+        }
+
+        if (result.error) {
+          console.error("Failed to update order from webhook:", result.error);
           return new Response("DB error", { status: 500 });
+        }
+
+        if (!result.data || result.data.length === 0) {
+          console.warn(`[Asaas Webhook] No order found for payment ${asaasPaymentId}`);
         }
 
         return new Response("ok", { status: 200 });
