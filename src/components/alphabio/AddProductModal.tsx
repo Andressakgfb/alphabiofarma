@@ -1,8 +1,9 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { X, Upload } from "lucide-react";
+import { X, Upload, SlidersHorizontal } from "lucide-react";
 import { customProducts } from "@/lib/customProducts";
 import { siteSettings } from "@/lib/siteSettings";
 import { BRANDS } from "@/lib/catalog";
+import { TaxonomyEditModal } from "./TaxonomyEditModal";
 import { toast } from "sonner";
 
 type Props = {
