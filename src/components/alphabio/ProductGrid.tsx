@@ -230,6 +230,8 @@ export function ProductGrid() {
     const q = filters.query.trim().toLowerCase();
     return livePricedProducts.filter((p) => {
       if (filters.brand !== "Todas" && p.brand !== filters.brand) return false;
+      if (filters.category !== "Todas" && p.category && p.category !== filters.category) return false;
+      if (filters.category !== "Todas" && !p.category) return false;
       if (filters.priceMax && p.price > filters.priceMax) return false;
       if (q) {
         const hay = `${p.name} ${p.brand}`.toLowerCase();
