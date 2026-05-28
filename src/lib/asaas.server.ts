@@ -32,7 +32,7 @@ async function asaasFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
   }
   if (!res.ok) {
     console.error(
-      `Asaas API ${res.status} on ${path}:`,
+      `Asaas API ${res.status} on ${path}:
       typeof body === "string" ? body : JSON.stringify(body),
     );
     throw new Error("Erro ao processar pagamento. Tente novamente.");
@@ -77,6 +77,11 @@ export type AsaasPayment = {
   dueDate: string;
 };
 
+export type AsaasSplitConfig = {
+  walletId: string;
+  percentualValue: number;
+}[];
+
 export async function createPayment(input: {
   customerId: string;
   value: number;
@@ -84,17 +89,28 @@ export async function createPayment(input: {
   externalReference: string;
   dueDate: string; // YYYY-MM-DD
   billingType?: "UNDEFINED" | "PIX" | "CREDIT_CARD" | "BOLETO";
+  split?: AsaasSplitConfig;
 }): Promise<AsaasPayment> {
+  const body: Record<string, unknown> = {
+    customer: input.customerId,
+    billingType: input.billingType ?? "UNDEFINED",
+    value: input.value,
+    dueDate: input.dueDate,
+    description: input.description,
+    externalReference: input.externalReference,
+  };
+
+  if (input.split && input.split.length > 0) {
+    body.split = input.split;
+  }
+
   return asaasFetch<AsaasPayment>("/payments", {
     method: "POST",
-    body: JSON.stringify({
-      customer: input.customerId,
-      billingType: input.billingType ?? "UNDEFINED",
-      value: input.value,
-      dueDate: input.dueDate,
-      description: input.description,
-      externalReference: input.externalReference,
-    }),
+    body: JSON.stringify(body),
+    headers: {
+      // Idempotency: prevents duplicate charges if retried
+      "X-Idempotency-Key": input.externalReference,
+    },
   });
 }
 
