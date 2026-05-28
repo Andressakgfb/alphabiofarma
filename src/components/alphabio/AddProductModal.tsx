@@ -157,6 +157,7 @@ export function AddProductModal({ open, onClose, initialCategory }: Props) {
           <button onClick={submit} className="flex-1 h-10 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90">Adicionar</button>
         </div>
       </div>
+      <TaxonomyEditModal open={editingTypes} kind="productType" onClose={() => setEditingTypes(false)} />
     </div>
   );
 }
