@@ -1,8 +1,16 @@
-import { ShieldCheck, Truck, CreditCard, BadgePercent } from "lucide-react";
+import { Truck, CreditCard, BadgePercent, type LucideIcon } from "lucide-react";
 import bannerHero from "@/assets/banner-hero.png";
+import secureShieldIcon from "@/assets/icon-secure-shield.png";
 
-const benefits = [
-  { icon: ShieldCheck, label: "Compra 100% segura", sub: "Pagamento criptografado" },
+type Benefit = {
+  icon?: LucideIcon;
+  image?: string;
+  label: string;
+  sub: string;
+};
+
+const benefits: Benefit[] = [
+  { image: secureShieldIcon, label: "Compra 100% segura", sub: "Pagamento criptografado" },
   { icon: Truck, label: "Frete rápido", sub: "Entrega segura" },
   { icon: CreditCard, label: "Parcele em 10x", sub: "Sem juros" },
   { icon: BadgePercent, label: "Melhores preços", sub: "Aproveite os descontos" },
@@ -30,7 +38,11 @@ export function Hero() {
               className="flex items-center gap-3 rounded-xl border border-border bg-card px-3 py-3 shadow-[var(--shadow-soft)]"
             >
               <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <b.icon className="h-5 w-5" strokeWidth={1.75} />
+                {b.image ? (
+                  <img src={b.image} alt="" className="h-7 w-7 object-contain" />
+                ) : b.icon ? (
+                  <b.icon className="h-5 w-5" strokeWidth={1.75} />
+                ) : null}
               </span>
               <div className="min-w-0">
                 <p className="text-xs sm:text-sm font-semibold text-foreground leading-tight truncate">{b.label}</p>
