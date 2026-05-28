@@ -26,13 +26,33 @@ export type Product = {
   isCustom?: boolean;
 };
 
+function inferTaxonomy(name: string): { category?: string; productType?: string } {
+  const n = name.toLowerCase();
+  if (n.includes("retatru") || n.startsWith("reta") || n.includes("retagen")) {
+    return { category: "Retatrutida", productType: "Emagrecimento/ Metabólicos" };
+  }
+  if (n.includes("tirze") || n.includes("tirz") || n.includes("mounjaro")) {
+    return { category: "Tirzepatida / Mounjaro", productType: "Emagrecimento/ Metabólicos" };
+  }
+  if (n.includes("ghk") || n.includes("tesa")) {
+    return { category: "Hormônio Crescimento Regenerativo", productType: "Hormônio Crescimento Regenerativos" };
+  }
+  if (n.includes("nad") || n.includes("glow") || n.includes("pt-141") || n.includes("pt141")) {
+    return { category: "Suplementação e Performance", productType: "Bem-estar e Saúde Integrativa" };
+  }
+  return { category: "Suplementação e Performance", productType: "Peptídeo de Performance" };
+}
+
 const baseProducts: Product[] = PRODUCTS_DATA.map((p) => {
   const count = p.price >= 1500 ? 10 : 6;
+  const tax = inferTaxonomy(p.name);
   return {
     ...p,
     rating: 4.8,
     reviews: Math.max(24, Math.round(p.stock * 3.2)),
     installment: { count, value: +(p.price / count).toFixed(2) },
+    category: tax.category,
+    productType: tax.productType,
   };
 });
 
