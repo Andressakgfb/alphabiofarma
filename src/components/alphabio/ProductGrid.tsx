@@ -113,6 +113,7 @@ function Stars({ n }: { n: number }) {
 
 export function ProductCard({ p, onOpen }: { p: Product; onOpen: (p: Product) => void }) {
   const outOfStock = p.stock === 0;
+  const { isAdmin } = useIsAdmin();
   return (
     <article
       data-product-name={p.name}
