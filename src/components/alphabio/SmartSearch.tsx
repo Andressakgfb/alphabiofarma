@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { Search, Tag, Building2, DollarSign, X, Pencil } from "lucide-react";
+import { Search, Tag, Building2, DollarSign, X, Pencil, Plus } from "lucide-react";
 import { catalog } from "@/lib/catalog";
 import { siteSettings } from "@/lib/siteSettings";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { TaxonomyEditModal } from "./TaxonomyEditModal";
+import { AddProductModal } from "./AddProductModal";
 
 function useTaxonomy() {
   const cats = useSyncExternalStore(
