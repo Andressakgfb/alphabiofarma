@@ -82,6 +82,12 @@ export function CheckoutModal({
       return;
     }
 
+    const digits = cpfCnpj.replace(/\D/g, "");
+    if (digits.length !== 11 && digits.length !== 14) {
+      toast.error("Informe um CPF (11 dígitos) ou CNPJ (14 dígitos) válido");
+      return;
+    }
+
     setSubmitting(true);
     try {
       const result = await createCheckout({
