@@ -132,9 +132,9 @@ export const createAsaasCheckout = createServerFn({ method: "POST" })
     }
 
     // 4. Build split config if env vars are set
-    const partnerWalletId = process.env.ASAAS_PARTNER_WALLET_ID;
+    const partnerWalletId = process.env.ASAAS_PARTNER_WALLET_ID?.trim();
     const partnerPercentage = process.env.ASAAS_PARTNER_PERCENTAGE
-      ? parseFloat(process.env.ASAAS_PARTNER_PERCENTAGE)
+      ? parseFloat(process.env.ASAAS_PARTNER_PERCENTAGE.trim())
       : 0;
 
     const split =
