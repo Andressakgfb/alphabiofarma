@@ -1,8 +1,10 @@
 // Server-only Asaas API helpers. Do NOT import from client code.
 
 export function asaasBaseUrl(): string {
-  // Produção única — sandbox removido
-  return "https://api.asaas.com/v3";
+  const env = (process.env.ASAAS_ENV || "sandbox").toLowerCase();
+  return env === "production"
+    ? "https://api.asaas.com/v3"
+    : "https://api-sandbox.asaas.com/v3";
 }
 
 function asaasHeaders() {
