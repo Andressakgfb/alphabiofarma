@@ -77,10 +77,38 @@ export type AsaasPayment = {
   dueDate: string;
 };
 
-export type AsaasSplitConfig = {
-  walletId: string;
-  percentualValue: number;
-}[];
+export type AsaasSplitEntry =
+  | { walletId: string; percentualValue: number }
+  | { walletId: string; fixedValue: number };
+export type AsaasSplitConfig = AsaasSplitEntry[];
+
+/**
+ * Estimativa da taxa Asaas por tipo de cobrança.
+ * Valores padrão refletem o plano "Pro/Free" — ajuste via env vars
+ * (ASAAS_FEE_PIX, ASAAS_FEE_BOLETO, ASAAS_FEE_CARD_FIXED, ASAAS_FEE_CARD_PERCENT)
+ * caso a sua conta tenha taxas diferentes.
+ */
+export function estimateAsaasFee(
+  billingType: "PIX" | "BOLETO" | "CREDIT_CARD" | "UNDEFINED",
+  value: number,
+): number {
+  const pix = parseFloat(process.env.ASAAS_FEE_PIX || "0.99");
+  const boleto = parseFloat(process.env.ASAAS_FEE_BOLETO || "1.99");
+  const cardFixed = parseFloat(process.env.ASAAS_FEE_CARD_FIXED || "0.49");
+  const cardPct = parseFloat(process.env.ASAAS_FEE_CARD_PERCENT || "1.99") / 100;
+  switch (billingType) {
+    case "PIX":
+      return +pix.toFixed(2);
+    case "BOLETO":
+      return +boleto.toFixed(2);
+    case "CREDIT_CARD":
+      return +(cardFixed + value * cardPct).toFixed(2);
+    default:
+      // worst-case: cobra a maior taxa possível para garantir que a comissão
+      // não seja erodida quando o cliente escolhe o método na hora.
+      return +Math.max(pix, boleto, cardFixed + value * cardPct).toFixed(2);
+  }
+}
 
 export async function createPayment(input: {
   customerId: string;
