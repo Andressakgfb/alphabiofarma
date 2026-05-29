@@ -46,6 +46,7 @@ export const Route = createFileRoute("/api/public/asaas-webhook")({
 
         const provided = request.headers.get("asaas-access-token");
         if (!provided || provided !== expectedToken) {
+          console.log(`[Asaas Webhook] token mismatch: expectedLen=${expectedToken.length} expectedPrefix=${expectedToken.slice(0,6)} providedLen=${provided?.length ?? 0} providedPrefix=${provided?.slice(0,6) ?? "none"}`);
           return new Response("Invalid token", { status: 401 });
         }
 
