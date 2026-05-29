@@ -97,8 +97,17 @@ export function CheckoutModal({
         },
       });
       cart.clear();
-      // Redirect to Asaas hosted checkout
-      window.location.href = result.invoiceUrl;
+      // Abrir o checkout do Asaas em uma nova aba para evitar que o
+      // sistema operacional (Android/iOS) intercepte o link e abra o
+      // aplicativo do Asaas. Assim o cliente paga direto no navegador.
+      const win = window.open(result.invoiceUrl, "_blank", "noopener,noreferrer");
+      if (!win) {
+        // Bloqueador de pop-up: fallback para a mesma aba
+        window.location.href = result.invoiceUrl;
+        return;
+      }
+      toast.success("Pagamento aberto em uma nova aba");
+      onClose();
     } catch (err) {
       console.error(err);
       const msg = err instanceof Error ? err.message : "Erro ao processar pagamento";
