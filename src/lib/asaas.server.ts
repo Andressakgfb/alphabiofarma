@@ -93,7 +93,7 @@ export function estimateAsaasFee(
   value: number,
 ): number {
   const pix = parseFloat(process.env.ASAAS_FEE_PIX || "0.99");
-  const boleto = parseFloat(process.env.ASAAS_FEE_BOLETO || "1.99");
+  const boleto = parseFloat(process.env.ASAAS_FEE_BOLETO || "0.99");
   const cardFixed = parseFloat(process.env.ASAAS_FEE_CARD_FIXED || "0.49");
   const cardPct = parseFloat(process.env.ASAAS_FEE_CARD_PERCENT || "1.99") / 100;
   switch (billingType) {
