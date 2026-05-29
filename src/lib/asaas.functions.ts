@@ -132,21 +132,30 @@ export const createAsaasCheckout = createServerFn({ method: "POST" })
       };
     }
 
-    // 4. Build split config if env vars are set
+    // 4. Build split config.
+    // Estratégia: a comissão da carteira principal é INTEGRAL sobre o valor bruto
+    // (ex.: 20% de R$100 = R$20 líquidos). A taxa Asaas é absorvida 100% pelo
+    // parceiro/fornecedor. Usamos `fixedValue` no split do parceiro = bruto − comissão − taxa,
+    // e a carteira principal recebe o restante do netValue (= comissão alvo).
     const partnerWalletId = process.env.ASAAS_PARTNER_WALLET_ID?.trim();
     const partnerPercentage = process.env.ASAAS_PARTNER_PERCENTAGE
       ? parseFloat(process.env.ASAAS_PARTNER_PERCENTAGE.trim())
       : 0;
 
-    const split =
-      partnerWalletId && partnerPercentage > 0 && partnerPercentage < 100
-        ? [
-            {
-              walletId: partnerWalletId,
-              percentualValue: partnerPercentage,
-            },
-          ]
-        : undefined;
+    const billingType = data.billingType || "UNDEFINED";
+    const grossTotal = +total.toFixed(2);
+
+    let split: { walletId: string; fixedValue: number }[] | undefined;
+    if (partnerWalletId && partnerPercentage > 0 && partnerPercentage < 100) {
+      const commissionPct = (100 - partnerPercentage) / 100; // fatia da principal sobre o bruto
+      const mainShare = +(grossTotal * commissionPct).toFixed(2);
+      const fee = estimateAsaasFee(billingType, grossTotal);
+      const partnerFixed = +(grossTotal - mainShare - fee).toFixed(2);
+      if (partnerFixed <= 0) {
+        throw new Error("Valor da venda muito baixo para cobrir a taxa do parceiro.");
+      }
+      split = [{ walletId: partnerWalletId, fixedValue: partnerFixed }];
+    }
 
     // 5. Create payment in Asaas
     const description = enriched
