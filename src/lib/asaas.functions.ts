@@ -4,6 +4,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { getProductById } from "@/lib/products-data";
 import {
   createPayment,
+  estimateAsaasFee,
   findOrCreateCustomer,
   isValidCpfCnpj,
   todayPlusDays,
