@@ -1,7 +1,7 @@
 // Server-only Asaas API helpers. Do NOT import from client code.
 
 export function asaasBaseUrl(): string {
-  const env = (process.env.ASAAS_ENV || "sandbox").toLowerCase();
+  const env = (process.env.ASAAS_ENV || "sandbox").trim().toLowerCase();
   return env === "production"
     ? "https://api.asaas.com/v3"
     : "https://api-sandbox.asaas.com/v3";
