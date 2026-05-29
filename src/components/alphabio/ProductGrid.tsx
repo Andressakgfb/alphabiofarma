@@ -75,7 +75,7 @@ export const products: Product[] = baseProducts;
 function buildCustom(): Product[] {
   return customProducts.list().map((p) => {
     const count = p.price >= 1500 ? 10 : 6;
-    return {
+    const base: Product = {
       id: p.id,
       name: p.name,
       brand: p.brand,
@@ -91,6 +91,7 @@ function buildCustom(): Product[] {
       reviews: 0,
       installment: { count, value: +(p.price / count).toFixed(2) },
     };
+    return applyOverride(base);
   });
 }
 
