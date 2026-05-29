@@ -17,9 +17,11 @@ function statusFromEvent(event: string): string | null {
     case "PAYMENT_CHARGEBACK_REQUESTED":
     case "PAYMENT_CHARGEBACK_DISPUTE":
       return "cancelled";
+    case "PAYMENT_REPROVED_BY_RISK_ANALYSIS":
+    case "PAYMENT_CREDIT_CARD_CAPTURE_REFUSED":
+      return "refused";
     case "PAYMENT_AWAITING_RISK_ANALYSIS":
     case "PAYMENT_APPROVED_BY_RISK_ANALYSIS":
-      return "pending";
     case "PAYMENT_PENDING":
     case "PAYMENT_BANK_SLIP_VIEWED":
       return "pending";
