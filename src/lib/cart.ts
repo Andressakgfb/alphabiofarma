@@ -1,6 +1,4 @@
-import { customProducts } from "./customProducts";
-import { fieldOverrides } from "./productDescriptionOverrides";
-import { PRODUCTS_DATA } from "./products-data";
+import { catalogProducts } from "./catalogProducts";
 
 export type CartItem = {
   id: string;
@@ -26,18 +24,15 @@ function rawRead(): CartItem[] {
 }
 
 function resolveCartItem(item: CartItem): CartItem {
-  const custom = customProducts.list().find((product) => product.id === item.id);
-  const base = custom ?? PRODUCTS_DATA.find((product) => product.id === item.id);
+  const base = catalogProducts.getById(item.id);
   if (!base) return item;
-
-  const override = fieldOverrides.get(item.id);
   return {
     ...item,
     name: base.name,
     brand: base.brand,
-    image: override?.image ?? base.image,
-    price: typeof override?.price === "number" ? override.price : base.price,
-    stock: typeof override?.stock === "number" ? override.stock : base.stock,
+    image: base.image,
+    price: base.price,
+    stock: base.stock,
   };
 }
 
@@ -76,13 +71,11 @@ export const cart = {
   subscribe(cb: () => void) {
     const handler = () => cb();
     window.addEventListener(EVENT, handler);
-    window.addEventListener("alphabio:overrides-changed", handler);
-    window.addEventListener("alphabio:custom-products-changed", handler);
+    window.addEventListener(catalogProducts.eventName, handler);
     window.addEventListener("storage", handler);
     return () => {
       window.removeEventListener(EVENT, handler);
-      window.removeEventListener("alphabio:overrides-changed", handler);
-      window.removeEventListener("alphabio:custom-products-changed", handler);
+      window.removeEventListener(catalogProducts.eventName, handler);
       window.removeEventListener("storage", handler);
     };
   },
