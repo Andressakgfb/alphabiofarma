@@ -2,6 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { getProductById } from "@/lib/products-data";
+import { fieldOverrides } from "@/lib/productDescriptionOverrides";
+import { customProducts } from "@/lib/customProducts";
 import {
   createPayment,
   estimateAsaasFee,
@@ -40,16 +42,19 @@ export const createAsaasCheckout = createServerFn({ method: "POST" })
     // Server-side price recalculation: trust the catalog, never the client.
     let total = 0;
     const enriched = data.items.map((it) => {
-      const p = getProductById(it.id);
+      const p = customProducts.get(it.id) ?? getProductById(it.id);
       if (!p) throw new Error(`Produto não encontrado: ${it.id}`);
-      if (p.stock <= 0) throw new Error(`Produto sem estoque: ${p.name}`);
-      const lineTotal = p.price * it.qty;
+      const override = fieldOverrides.get(it.id);
+      const price = typeof override?.price === "number" ? override.price : p.price;
+      const stock = typeof override?.stock === "number" ? override.stock : p.stock;
+      if (stock <= 0) throw new Error(`Produto sem estoque: ${p.name}`);
+      const lineTotal = price * it.qty;
       total += lineTotal;
       return {
         id: p.id,
         name: p.name,
         brand: p.brand,
-        price: p.price,
+        price,
         qty: it.qty,
         lineTotal,
       };

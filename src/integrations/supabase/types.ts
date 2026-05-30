@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      catalog_products: {
+        Row: {
+          brand: string
+          category: string | null
+          created_at: string
+          id: string
+          image: string
+          is_custom: boolean
+          name: string
+          old_price: number | null
+          price: number
+          product_type: string | null
+          stock: number
+          tag: string | null
+          updated_at: string
+        }
+        Insert: {
+          brand: string
+          category?: string | null
+          created_at?: string
+          id: string
+          image: string
+          is_custom?: boolean
+          name: string
+          old_price?: number | null
+          price: number
+          product_type?: string | null
+          stock?: number
+          tag?: string | null
+          updated_at?: string
+        }
+        Update: {
+          brand?: string
+          category?: string | null
+          created_at?: string
+          id?: string
+          image?: string
+          is_custom?: boolean
+          name?: string
+          old_price?: number | null
+          price?: number
+          product_type?: string | null
+          stock?: number
+          tag?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           asaas_invoice_url: string | null

@@ -45,6 +45,9 @@ export const fieldOverrides = {
   get(id: string): FieldOverride | undefined {
     return readJson<FieldStore>(FIELDS_KEY)[id];
   },
+  getAll(): FieldStore {
+    return readJson<FieldStore>(FIELDS_KEY);
+  },
   set(id: string, patch: FieldOverride) {
     const store = readJson<FieldStore>(FIELDS_KEY);
     store[id] = { ...store[id], ...patch };

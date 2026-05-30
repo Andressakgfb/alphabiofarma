@@ -27,6 +27,9 @@ export const customProducts = {
   list(): CustomProduct[] {
     return readAll();
   },
+  get(id: string): CustomProduct | undefined {
+    return readAll().find((p) => p.id === id);
+  },
   add(p: Omit<CustomProduct, "id"> & { id?: string }) {
     const list = readAll();
     const id = p.id || `custom-${Date.now().toString(36)}`;
